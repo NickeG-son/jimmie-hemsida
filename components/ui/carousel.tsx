@@ -8,7 +8,7 @@ import useEmblaCarousel, {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { HTMLMotionProps, motion } from "motion/react";
+import { motion } from "motion/react";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -20,7 +20,6 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
-  loop?: boolean;
 };
 
 type CarouselContextProps = {
@@ -30,16 +29,11 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  // Added for dots
+  scrollTo: (index: number) => void;
   selectedIndex: number;
   scrollSnaps: number[];
-  scrollTo: (index: number) => void;
 } & CarouselProps;
-
-type CarouselItemProps = {
-  motionItem?: boolean;
-  index: number;
-} & React.ComponentProps<"div"> &
-  HTMLMotionProps<"div">;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
@@ -60,33 +54,34 @@ function Carousel({
   plugins,
   className,
   children,
-  loop,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
-      loop: loop ?? opts?.loop,
     },
     plugins,
   );
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
+  // State for dots
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return;
+    setSelectedIndex(api.selectedScrollSnap()); // Update current index
     setCanScrollPrev(api.canScrollPrev());
     setCanScrollNext(api.canScrollNext());
-    setSelectedIndex(api.selectedScrollSnap());
   }, []);
 
-  const onInit = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setScrollSnaps(api.scrollSnapList());
-  }, []);
+  const scrollTo = React.useCallback(
+    (index: number) => {
+      api?.scrollTo(index);
+    },
+    [api],
+  );
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev();
@@ -95,13 +90,6 @@ function Carousel({
   const scrollNext = React.useCallback(() => {
     api?.scrollNext();
   }, [api]);
-
-  const scrollTo = React.useCallback(
-    (index: number) => {
-      api?.scrollTo(index);
-    },
-    [api],
-  );
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -123,16 +111,21 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return;
-    onInit(api);
+
+    // Initialize snaps and selection
+    setScrollSnaps(api.scrollSnapList());
     onSelect(api);
-    api.on("reInit", onInit);
-    api.on("reInit", onSelect);
+
+    api.on("reInit", (api) => {
+      setScrollSnaps(api.scrollSnapList());
+      onSelect(api);
+    });
     api.on("select", onSelect);
 
     return () => {
       api?.off("select", onSelect);
     };
-  }, [api, onInit, onSelect]);
+  }, [api, onSelect]);
 
   return (
     <CarouselContext.Provider
@@ -140,15 +133,16 @@ function Carousel({
         carouselRef,
         api: api,
         opts,
-        orientation,
-        loop,
+        orientation:
+          orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
         scrollPrev,
         scrollNext,
         canScrollPrev,
         canScrollNext,
+        // Provided for dots
+        scrollTo,
         selectedIndex,
         scrollSnaps,
-        scrollTo,
       }}
     >
       <div
@@ -186,45 +180,19 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CarouselItem({
-  className,
-  motionItem,
-  index,
-  ...props
-}: CarouselItemProps) {
-  const { orientation, selectedIndex } = useCarousel();
-
-  const isActive = index === selectedIndex;
-
-  const baseClass = cn(
-    " min-w-0 shrink-0 grow-0 transition-all",
-    orientation === "horizontal" ? "pl-4" : "pt-4",
-
-    className,
-  );
-
-  if (motionItem) {
-    return (
-      <motion.div
-        layout // 🔥 THIS is the magic
-        role="group"
-        aria-roledescription="slide"
-        data-slot="carousel-item"
-        className={baseClass}
-        animate={{
-          width: isActive ? "50%" : "25%",
-        }}
-        {...props}
-      />
-    );
-  }
+function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
+  const { orientation } = useCarousel();
 
   return (
     <div
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
-      className={baseClass}
+      className={cn(
+        "min-w-0 shrink-0 grow-0 basis-full",
+        orientation === "horizontal" ? "pl-4" : "pt-4",
+        className,
+      )}
       {...props}
     />
   );
@@ -246,7 +214,7 @@ function CarouselPrevious({
       size={size}
       className={cn(
         absolute && "absolute",
-        "touch-manipulation rounded-full",
+        "cursor-pointer touch-manipulation rounded-full",
         absolute && orientation === "horizontal"
           ? "top-1/2 -left-12 -translate-y-1/2"
           : absolute && orientation === "vertical"
@@ -281,7 +249,7 @@ function CarouselNext({
       size={size}
       className={cn(
         absolute && "absolute",
-        "touch-manipulation rounded-full",
+        "cursor-pointer touch-manipulation rounded-full",
         absolute && orientation === "horizontal"
           ? "top-1/2 -right-12 -translate-y-1/2"
           : absolute && orientation === "vertical"
@@ -326,14 +294,16 @@ function CarouselDots({
           aria-label={`Go to slide ${index + 1}`}
           animate={{
             width: index === selectedIndex ? "1rem" : "0.375rem",
+            backgroundColor:
+              index === selectedIndex ? "var(--primary)" : "var(--primary)", // Example color logic
+            opacity: index === selectedIndex ? 1 : 0.4,
           }}
           transition={{
             duration: 0.2,
           }}
           className={cn(
-            "bg-primary/20 h-1.5 rounded-full transition-all",
+            "h-1.5 rounded-full",
             dotClassName,
-            index === selectedIndex && "bg-primary w-4",
             index === selectedIndex && activeDotClassName,
           )}
           onClick={() => scrollTo(index)}
@@ -350,6 +320,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  CarouselDots,
   useCarousel,
+  CarouselDots,
 };

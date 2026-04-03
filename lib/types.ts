@@ -16,7 +16,7 @@ export interface GalleryImage {
   _id: string;
   title: string;
   slug: string;
-  image: string;
+  mainImage: MainImage;
   category: Category;
   description?: string;
   productInfo?: string;
@@ -24,6 +24,13 @@ export interface GalleryImage {
   iso: number;
   aperture: string;
   shutterSpeed: string;
+}
+
+export interface MainImage {
+  _id: string;
+  title: string;
+  slug: string;
+  image: string;
 }
 
 export interface HeroSlide {

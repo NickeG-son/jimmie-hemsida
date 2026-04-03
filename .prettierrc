@@ -1,9 +1,11 @@
 {
   "useTabs": false,
   "tabWidth": 2,
-  "plugins": ["prettier-plugin-tailwindcss"],
   "printWidth": 80,
   "trailingComma": "all",
   "singleQuote": false,
-  "semi": true
+  "semi": true,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindAttributes": ["className", "class"],
+  "tailwindFunctions": ["cn", "cva", "clsx"]
 }

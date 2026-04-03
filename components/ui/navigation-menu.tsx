@@ -61,7 +61,7 @@ function NavigationMenuItem({
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-2xl px-4.5 py-2.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50",
+  "group/navigation-menu-trigger hover:bg-muted focus:bg-muted focus-visible:ring-ring/50 inline-flex h-9 w-max items-center justify-center rounded-2xl px-4.5 py-2.5 text-sm font-medium transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50",
 );
 
 function NavigationMenuTrigger({
@@ -116,7 +116,7 @@ function NavigationMenuViewport({
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          "origin-top-center bg-popover text-popover-foreground ring-foreground/5 data-open:animate-in data-open:zoom-in-90 data-closed:animate-out data-closed:zoom-out-90 relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-2xl shadow-2xl ring-1 duration-100 md:w-(--radix-navigation-menu-viewport-width)",
+          "origin-top-center text-popover-foreground data-open:animate-in data-open:zoom-in-90 data-closed:animate-out data-closed:zoom-out-90 relative mt-1.5 mt-6 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-2xl shadow-2xl duration-100 md:w-(--radix-navigation-menu-viewport-width)",
           className,
         )}
         {...props}

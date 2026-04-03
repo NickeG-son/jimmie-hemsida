@@ -24,9 +24,9 @@ export default function Menu({ menuItems, categories }: MenuProps) {
   return (
     <NavigationMenu
       className="hidden md:flex"
-      viewportClassName="bg-black/20 backdrop-blur-md text-white top-4"
+      viewportClassName="bg-black/30 backdrop-blur-md text-white border-0 shadow-lg rounded-2xl"
     >
-      <NavigationMenuList>
+      <NavigationMenuList className="h-full">
         {menuItems.map((item) => (
           <NavigationMenuItem key={item._id}>
             {item.isDropdown ? (
@@ -36,12 +36,12 @@ export default function Menu({ menuItems, categories }: MenuProps) {
                   onClick={() => {
                     if (item.link) router.push(item.link);
                   }}
-                  className="cursor-pointer transition-all hover:!bg-transparent focus:!bg-transparent data-open:hover:!bg-transparent data-open:focus:!bg-transparent data-popup-open:!bg-transparent data-popup-open:hover:!bg-transparent"
+                  className="h-full cursor-pointer transition-all hover:!bg-transparent focus:!bg-transparent data-open:hover:!bg-transparent data-open:focus:!bg-transparent data-popup-open:!bg-transparent data-popup-open:hover:!bg-transparent"
                 >
                   {item.title}
                 </NavigationMenuTrigger>
 
-                <NavigationMenuContent className="">
+                <NavigationMenuContent>
                   <ul className="grid w-[300px] gap-3 p-4">
                     {/* Look here! We are looping through the Categories! */}
                     {categories.map((category) => (
