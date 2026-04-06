@@ -38,7 +38,7 @@ const ulVariants = {
   },
 };
 
-export default function MobileMenu({
+export default function AnimatedMenuMobile({
   menuItems,
   categories,
   className,
@@ -151,16 +151,23 @@ export default function MobileMenu({
                           transition={{ duration: 0.2 }}
                           className="grid w-[300px]"
                         >
-                          {/* Look here! We are looping through the Categories! */}
-                          {categories.map((category) => (
-                            <motion.li variants={liVariants} key={category._id}>
+                          {/* Mobile Dropdown Mapping */}
+                          {(item.dropdownItems && item.dropdownItems.length > 0
+                            ? item.dropdownItems
+                            : categories.map((c) => ({ ...c, _type: "category" as const }))
+                          ).map((subItem) => (
+                            <motion.li variants={liVariants} key={subItem._id}>
                               <Link
-                                href={`/galleri/${category.slug}`}
+                                href={
+                                  subItem._type === "category"
+                                    ? `/galleri/${subItem.slug}`
+                                    : `/${subItem.slug}`
+                                }
                                 onClick={() => setOpen(false)}
                                 className="flex w-full rounded-md px-6 py-4 no-underline transition-colors outline-none select-none"
                               >
                                 <div className="text-base leading-none font-medium">
-                                  {category.title}
+                                  {subItem.title}
                                 </div>
                               </Link>
                             </motion.li>

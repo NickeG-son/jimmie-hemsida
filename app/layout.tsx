@@ -30,7 +30,13 @@ export default async function RootLayout({
       _id,
       title,
       link,
-      isDropdown
+      isDropdown,
+      dropdownItems[]->{ 
+        _type,
+        _id,
+        title,
+        "slug": slug.current
+      }
     }
   `);
   const categories = await client.fetch(`

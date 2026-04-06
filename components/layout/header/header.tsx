@@ -8,11 +8,13 @@ import Menu from "./menu";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import MobileMenu from "./mobile-menu";
+import MobileMenu from "./animated-menu";
 import { MenuIcon } from "lucide-react";
 import Logo from "@/app/assets/images/jj-logo.png";
 
 import Image from "next/image";
+import AnimatedMenu from "./animated-menu";
+import AnimatedMenuMobile from "./animated-menu-mobile";
 
 interface HeaderProps {
   menuItems: MenuItem[];
@@ -23,6 +25,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [laptopMenuOpen, setLaptopMenuOpen] = useState<string>("");
 
   // useMotionValueEvent är det moderna sättet att lyssna på värden
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -48,7 +51,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
         />
       </Link>
       <header
-        className={`fixed right-0 bottom-4 left-0 z-50 mx-4 rounded-full bg-black/20 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8 lg:top-4 lg:bottom-[unset]`}
+        className={`fixed right-0 bottom-4 left-0 z-50 mx-4 rounded-full bg-black/20 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8 lg:top-4 lg:bottom-[unset] lg:left-1/2 lg:-translate-x-1/2`}
       >
         <div
           className={`flex items-center justify-between px-3 py-3 transition-all duration-500`}
@@ -68,7 +71,29 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           </Link>
 
           {/* Navigation Links - Center */}
-          <Menu menuItems={menuItems} categories={categories} />
+          <div className="hidden items-center gap-4 lg:flex">
+            {menuItems.map((item) => (
+              <Link
+                key={item._id}
+                href={item.link || "#"}
+                onMouseOver={
+                  item.isDropdown
+                    ? () => setLaptopMenuOpen(item._id)
+                    : undefined
+                }
+                onMouseLeave={
+                  item.isDropdown ? () => setLaptopMenuOpen("") : undefined
+                }
+                className={
+                  item.isDropdown
+                    ? "relative before:absolute before:inset-x-0 before:-bottom-12 before:h-12 before:bg-transparent"
+                    : ""
+                }
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
 
           <Button
             variant="link"
@@ -78,19 +103,16 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           >
             <MenuIcon className="size-6" />
           </Button>
-
-          <div className="flex hidden items-center justify-end gap-4 lg:flex">
-            <Link
-              className={`hover:!bg-transparent ${navigationMenuTriggerStyle()} `}
-              href="/kontakt"
-            >
-              Kontakt
-            </Link>
-            {/*     <ThemeToggle /> */}
-          </div>
+          <div className="hidden size-12 lg:block" />
         </div>
       </header>
-      <MobileMenu
+      <AnimatedMenu
+        menuItems={menuItems}
+        categories={categories}
+        open={laptopMenuOpen}
+        setOpen={setLaptopMenuOpen}
+      />
+      <AnimatedMenuMobile
         menuItems={menuItems}
         categories={categories}
         open={mobileMenuOpen}

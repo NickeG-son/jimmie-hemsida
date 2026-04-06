@@ -16,14 +16,16 @@ export default defineType({
       name: "link",
       title: "Link URL",
       type: "string",
-      description: 'e.g., "/om-mig" or "/kontakt". (Leave blank if this is just a Dropdown trigger)',
+      description:
+        'e.g., "/om-mig" or "/kontakt". (Leave blank if this is just a Dropdown trigger)',
     }),
     defineField({
       name: "isDropdown",
-      title: "Is this a Category Dropdown?",
+      title: "Has Dropdown Menu?",
       type: "boolean",
       initialValue: false,
-      description: "If turned ON, this menu item will automatically fetch and display all your Gallery Categories!",
+      description:
+        "If turned ON, you can add specific Categories or Pages below to be displayed in the dropdown menu.",
     }),
     defineField({
       name: "order",
@@ -31,6 +33,13 @@ export default defineType({
       type: "number",
       validation: (Rule) => Rule.required(),
       description: "Used to sort the menu items from left to right.",
+    }),
+    defineField({
+      name: "dropdownItems",
+      title: "Dropdown Items",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "category" }, { type: "page" }] }],
+      hidden: ({ parent }) => !parent.isDropdown, // Only show if isDropdown is true
     }),
   ],
 });
