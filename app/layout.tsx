@@ -5,6 +5,7 @@ import Header from "@/components/layout/header/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { client } from "@/sanity/client";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,6 +66,7 @@ export default async function RootLayout({
         </body>
       </html>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }
