@@ -74,10 +74,10 @@ export default function GalleryCarousel({
                 {/* The Cover Image */}
                 {item.mainImage ? (
                   <Image
-                    src={urlFor(item.mainImage).width(800).height(450).url()}
+                    src={urlFor(item.mainImage).width(1920).height(1080).url()}
                     alt={item.title}
-                    width={800}
-                    height={450}
+                    width={1920}
+                    height={1080}
                     className={cn(
                       "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-60",
                     )}

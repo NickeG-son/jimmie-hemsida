@@ -11,6 +11,7 @@ import { GalleryImage } from "@/lib/types";
 import {
   Aperture,
   ApertureIcon,
+  ArrowLeftIcon,
   Camera,
   CameraIcon,
   Timer,
@@ -30,9 +31,27 @@ export default function ClientContent({
     (image: GalleryImage) => image.slug === detaildId,
   );
   const [hasLoaded, setHasLoaded] = useState(false); // Track initial load
+  const [screenState, setScreenState] = useState({
+    isPortrait: false,
+    isMobile: false,
+  });
+  const [hideUi, setHideUi] = useState(false);
 
   useEffect(() => {
     setHasLoaded(true);
+
+    if (typeof window !== "undefined") {
+      const checkScreen = () => {
+        setScreenState({
+          isPortrait: window.innerHeight > window.innerWidth,
+          isMobile: window.innerWidth < 1024,
+        });
+      };
+      checkScreen();
+
+      window.addEventListener("resize", checkScreen);
+      return () => window.removeEventListener("resize", checkScreen);
+    }
   }, []);
 
   console.log(detaildPhoto);
@@ -42,7 +61,7 @@ export default function ClientContent({
     <div
       className={cn(
         "relative min-h-[100dvh] w-full overflow-hidden",
-        detaildId ? "" : "h-full w-full px-8 py-24",
+        detaildId ? "" : "h-full w-full px-4 py-24 lg:px-8",
       )}
     >
       {!detaildId ? (
@@ -50,13 +69,17 @@ export default function ClientContent({
           <h1 className="mb-4 text-center text-2xl font-bold tracking-widest uppercase lg:text-5xl">
             {category}
           </h1>
-          <div className="sticky top-12 left-0 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md lg:absolute lg:top-28 lg:left-8">
-            <Link href="/galleri">
+          <div className="bg-muted fixed top-6 left-6 z-10 flex w-fit min-w-13 flex-shrink-0 cursor-pointer items-center justify-center rounded-full px-2 py-2 backdrop-blur-md lg:absolute lg:top-22 lg:left-8 lg:bg-black/20 lg:px-4 lg:py-3">
+            <Link
+              href="/galleri"
+              className="cursor-pointer hover:!no-underline"
+            >
               <Button
                 variant="link"
-                className="text-foreground cursor-pointer text-sm tracking-widest uppercase transition-colors"
+                className="text-foreground flex cursor-pointer items-center gap-1 px-0 text-sm tracking-widest uppercase transition-colors"
               >
-                ← Tillbaka till Galleri
+                <ArrowLeftIcon className="size-5" />
+                <span className="hidden lg:flex">Tillbaka till Galleri</span>
               </Button>
             </Link>
           </div>
@@ -68,84 +91,100 @@ export default function ClientContent({
         </>
       ) : (
         <>
-          <div className="absolute top-28 left-4 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md lg:left-8">
-            <Button
-              variant="link"
-              onClick={() => setDetaildId(null)}
-              className="text-foreground cursor-pointer text-sm tracking-widest uppercase transition-colors"
-            >
-              ← Tillbaka till {category}
-            </Button>
-          </div>
           <AnimatePresence>
             {detaildPhoto && (
-              <>
+              <motion.div
+                layout
+                layoutId={`photo-${detaildPhoto.slug}`}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black lg:absolute lg:z-0 lg:rounded-3xl lg:bg-black/20 lg:backdrop-blur-md"
+              >
+                {/* 
+                  This is the magic wrapper!
+                  On portrait mobile screens, it forces the entire UI to rotate 90 degrees 
+                  and swap its width/height to fill the screen perfectly sideways!
+                  On landscape or desktop, it stays normal.
+                */}
                 <motion.div
-                  initial={{ opacity: 0, x: "100%" }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: "100%" }}
-                  transition={{ delay: 0.2 }}
-                  className="absolute top-48 right-8 bottom-32 z-10 flex flex-col rounded-3xl bg-black/20 p-8 backdrop-blur-md lg:top-28 lg:bottom-8"
-                >
-                  <h1 className="mt-8 text-4xl font-bold tracking-widest uppercase md:text-6xl">
-                    {detaildPhoto?.title || detaildPhoto?.slug}
-                  </h1>
-
-                  {detaildPhoto?.description && (
-                    <p className="text-foreground mt-4 max-w-2xl">
-                      {detaildPhoto.description}
-                    </p>
-                  )}
-                </motion.div>
-                <motion.div
-                  layout
-                  layoutId={`photo-${detaildPhoto.slug}`}
-                  className="absolute top-0 right-0 bottom-0 left-0 flex flex-col rounded-3xl bg-black/20 p-8 backdrop-blur-md"
+                  initial={{ rotate: 0, width: "100%", height: "100%" }}
+                  animate={
+                    screenState.isMobile && screenState.isPortrait
+                      ? { rotate: 90, width: "100dvh", height: "100dvw" }
+                      : { rotate: 0, width: "100%", height: "100%" }
+                  }
+                  transition={{ type: "spring", bounce: 0.1, duration: 0.6 }}
+                  className="relative flex shrink-0 items-center justify-center overflow-hidden"
                 >
                   <Image
                     src={urlFor(detaildPhoto.mainImage)
-                      .width(800)
-                      .height(450)
+                      .width(1920)
+                      .height(1080)
                       .url()}
                     alt={detaildPhoto.title}
                     fill
-                    className="object-cover"
+                    priority
+                    className="z-0 object-cover"
                   />
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {detaildPhoto && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ delay: 0.3 }}
-                  className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-4 rounded-full bg-black/20 px-8 py-3 backdrop-blur-md"
-                >
-                  {detaildPhoto?.iso && (
-                    <p className="text-foreground flex max-w-2xl items-center gap-2">
-                      <Camera className="size-5" />
-                      {detaildPhoto.iso}
-                    </p>
-                  )}
-                  {detaildPhoto?.aperture && (
-                    <p className="text-foreground flex max-w-2xl items-center gap-2">
-                      <Aperture className="size-5" />
-                      {detaildPhoto.aperture}
-                    </p>
-                  )}
 
-                  {detaildPhoto?.shutterSpeed && (
-                    <p className="text-foreground flex max-w-2xl items-center gap-2">
-                      <Timer className="size-5" />
-                      {detaildPhoto.shutterSpeed}
-                    </p>
-                  )}
+                  {/* UI OVERLAYS - Placed INSIDE the rotated wrapper so they match orientation */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="pointer-events-none absolute inset-0 z-10 flex flex-col p-6 lg:p-8"
+                  >
+                    {/* Top Bar: Close Button */}
+                    <div className="flex w-full justify-start">
+                      <Button
+                        variant="ghost"
+                        onClick={() => setDetaildId(null)}
+                        className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/40 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white lg:px-6 lg:py-6"
+                      >
+                        <ArrowLeftIcon className="size-5" />
+                        <span className="hidden lg:flex">Tillbaka</span>
+                      </Button>
+                    </div>
+
+                    <div className="flex-1" />
+
+                    {/* Bottom / Right Layout */}
+                    <div className="pointer-events-auto absolute top-4 right-4 flex w-fit flex-col items-start gap-4 lg:top-28 lg:right-12 lg:bottom-12 lg:w-[400px] lg:items-stretch lg:justify-start lg:gap-8">
+                      {/* Text Box */}
+                      <div className="flex w-full flex-col rounded-3xl bg-black/40 p-6 text-white backdrop-blur-md lg:flex-1 lg:p-10">
+                        <h1 className="text-sm font-bold tracking-widest uppercase lg:mt-4 lg:text-3xl">
+                          {detaildPhoto.title || detaildPhoto.slug}
+                        </h1>
+                        {detaildPhoto.description && (
+                          <p className="mt-4 text-sm leading-relaxed text-white/80 lg:text-base">
+                            {detaildPhoto.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {/* Camera Stats */}
+                    <div className="absolute bottom-4 left-1/2 flex w-fit -translate-x-1/2 flex-wrap gap-4 rounded-3xl bg-black/40 p-2 text-white backdrop-blur-md empty:hidden">
+                      {detaildPhoto.iso && (
+                        <div className="flex items-center gap-3 font-medium">
+                          <Camera className="size-5 text-white/50" /> ISO{" "}
+                          {detaildPhoto.iso}
+                        </div>
+                      )}
+                      {detaildPhoto.aperture && (
+                        <div className="flex items-center gap-3 font-medium">
+                          <Aperture className="size-5 text-white/50" />{" "}
+                          {detaildPhoto.aperture}
+                        </div>
+                      )}
+                      {detaildPhoto.shutterSpeed && (
+                        <div className="flex items-center gap-3 font-medium">
+                          <Timer className="size-5 text-white/50" />{" "}
+                          {detaildPhoto.shutterSpeed}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
                 </motion.div>
-              </>
+              </motion.div>
             )}
           </AnimatePresence>
         </>

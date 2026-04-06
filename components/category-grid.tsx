@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { GalleryImage } from "@/lib/types";
+import { Maximize } from "lucide-react";
 
 const variantItem = {
   hidden: { opacity: 0, y: 40 },
@@ -33,7 +34,7 @@ export default function CategoryGrid({
       }}
       initial={skipAnimation ? "visible" : "hidden"}
       animate="visible"
-      className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+      className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:grid-cols-3"
     >
       {images.map((image: GalleryImage) => (
         <motion.div
@@ -45,11 +46,12 @@ export default function CategoryGrid({
           onClick={() => setDetaildId(image.slug)}
         >
           <Image
-            src={urlFor(image.mainImage).width(800).height(450).url()}
+            src={urlFor(image.mainImage).width(1920).height(1080).url()}
             alt={image.title}
             fill
             className="object-cover"
           />
+          <Maximize className="absolute top-4 right-4 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
         </motion.div>
       ))}
     </motion.div>

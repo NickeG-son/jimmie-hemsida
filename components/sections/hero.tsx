@@ -10,7 +10,10 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { scrollYProgress } = useScroll({ target: containerRef });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (progress) => {
@@ -23,6 +26,14 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
     return () => unsubscribe();
   }, [scrollYProgress, slides.length]);
 
+  useEffect(() => {
+    // Enable native smooth scroll-snapping on the HTML element only when Hero is mounted
+    document.documentElement.classList.add("snap-y", "snap-mandatory");
+    return () => {
+      document.documentElement.classList.remove("snap-y", "snap-mandatory");
+    };
+  }, []);
+
   if (!slides.length) return null;
 
   const slide = slides[activeIndex];
@@ -30,9 +41,19 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
   return (
     <div
       ref={containerRef}
-      style={{ height: `${slides.length * 45}svh` }}
+      style={{ height: `${slides.length * 100}dvh` }}
       className="relative w-full"
     >
+      {/* Invisible snap points to force scrolling to firmly stop at EACH slide one-by-one */}
+      <div className="pointer-events-none absolute top-0 right-0 left-0 z-0 flex flex-col">
+        {slides.map((s) => (
+          <div
+            key={s._id}
+            className="h-[100dvh] w-full snap-start snap-always"
+          />
+        ))}
+      </div>
+
       <div className="sticky top-0 h-dvh w-full overflow-hidden">
         {/* All images stacked — cross-fade by animating opacity only */}
         {slides.map((s, i) => (
@@ -68,9 +89,9 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.55, ease: "easeOut" }}
             >
-              <p className="mb-3 text-xs font-semibold tracking-[0.4em] text-white/60 uppercase">
+              {/*   <p className="mb-3 text-xs font-semibold tracking-[0.4em] text-white/60 uppercase">
                 Portfolio
-              </p>
+              </p> */}
               <h2 className="mb-4 text-5xl font-bold tracking-widest text-white uppercase md:text-7xl">
                 {slide.category.title}
               </h2>
@@ -107,7 +128,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
           animate={{ opacity: activeIndex === 0 ? 1 : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <span className="text-xs tracking-widest uppercase">Scroll</span>
+          <span className="text-xs tracking-widest uppercase">Scrolla ner</span>
           <motion.div
             className="h-8 w-[1px] bg-white/40"
             animate={{ scaleY: [0, 1, 0] }}
