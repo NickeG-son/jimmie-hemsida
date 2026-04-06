@@ -36,12 +36,14 @@ export default function AnimatedMenu({
   className,
   open,
   setOpen,
+  xPos,
 }: {
   menuItems: MenuItem[];
   categories: Category[];
   className?: string;
   open: string;
   setOpen: (open: string) => void;
+  xPos?: number;
 }) {
   const activeMenu = menuItems.find((item) => item._id === open);
 
@@ -59,8 +61,9 @@ export default function AnimatedMenu({
           exit={{ opacity: 0, y: -80, scale: 0.0 }}
           onMouseEnter={() => setOpen(activeMenu._id)}
           onMouseLeave={() => setOpen("")}
+          style={{ left: xPos ? `${xPos}px` : "50%" }}
           className={cn(
-            "fixed top-[95px] left-1/2 z-40 min-w-[200px] -translate-x-1/2 rounded-3xl bg-black/20 p-4 pt-4 shadow-lg backdrop-blur-md before:absolute before:inset-x-0 before:-top-10 before:h-12 before:bg-transparent",
+            "fixed top-[95px] z-40 min-w-[200px] -translate-x-1/2 rounded-3xl bg-black/20 p-4 pt-4 shadow-lg backdrop-blur-md before:absolute before:inset-x-0 before:-top-10 before:h-12 before:bg-transparent",
             className,
           )}
         >

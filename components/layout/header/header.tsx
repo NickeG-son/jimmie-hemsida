@@ -8,7 +8,6 @@ import Menu from "./menu";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import MobileMenu from "./animated-menu";
 import { MenuIcon } from "lucide-react";
 import Logo from "@/app/assets/images/jj-logo.png";
 
@@ -26,6 +25,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [laptopMenuOpen, setLaptopMenuOpen] = useState<string>("");
+  const [dropdownX, setDropdownX] = useState(0);
 
   // useMotionValueEvent är det moderna sättet att lyssna på värden
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -76,11 +76,13 @@ export default function Header({ menuItems, categories }: HeaderProps) {
               <Link
                 key={item._id}
                 href={item.link || "#"}
-                onMouseOver={
-                  item.isDropdown
-                    ? () => setLaptopMenuOpen(item._id)
-                    : undefined
-                }
+                onMouseOver={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  if (item.isDropdown) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setDropdownX(rect.left + rect.width / 2);
+                    setLaptopMenuOpen(item._id);
+                  }
+                }}
                 onMouseLeave={
                   item.isDropdown ? () => setLaptopMenuOpen("") : undefined
                 }
@@ -111,6 +113,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
         categories={categories}
         open={laptopMenuOpen}
         setOpen={setLaptopMenuOpen}
+        xPos={dropdownX}
       />
       <AnimatedMenuMobile
         menuItems={menuItems}
