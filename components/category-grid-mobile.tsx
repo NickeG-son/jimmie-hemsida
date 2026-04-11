@@ -23,14 +23,14 @@ export default function CategoryGrid({
   setDetaildId: (id: string) => void;
   skipAnimation?: boolean;
 }) {
-  const [layout, setLayout] = useState("grid");
+  const [layout, setLayout] = useState("list");
 
   return (
     <div className="flex flex-col gap-4 pt-4">
       <Button
         variant="outline"
         size="icon"
-        className="bg-muted ml-auto size-13 cursor-pointer lg:absolute lg:top-23 lg:right-8"
+        className="bg-muted sticky top-12 ml-auto size-13 cursor-pointer"
         onClick={() => {
           if (layout === "list") setLayout("grid");
           else setLayout("list");

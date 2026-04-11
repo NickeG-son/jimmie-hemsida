@@ -1,14 +1,4 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { client, urlFor } from "../../../sanity/client";
-import Image from "next/image";
-import Link from "next/link";
-import GalleryCarousel from "@/components/gallery-carousel";
+import { client } from "../../../sanity/client";
 import ClientContent from "./client-content";
 
 export default async function GalleryCategoryPage({

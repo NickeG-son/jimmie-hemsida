@@ -14,9 +14,9 @@ export default async function GalleriRootPage() {
   `);
 
   return (
-    <div className="w-full py-24">
-      <h1 className="mb-4 text-center text-2xl font-bold tracking-widest uppercase lg:text-5xl">
-        Portfolios
+    <div className="w-full lg:py-24">
+      <h1 className="mb-4 hidden justify-center text-center text-2xl font-bold tracking-widest uppercase lg:flex lg:text-5xl">
+        Kategorier
       </h1>
 
       <GalleryCarousel items={categories} slugPrefix="/galleri" />

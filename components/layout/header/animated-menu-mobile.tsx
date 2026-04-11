@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Contact,
   ImageIcon,
+  Mail,
   MenuIcon,
   User,
   X,
@@ -73,7 +74,7 @@ export default function AnimatedMenuMobile({
           animate={{
             scale: 1,
             y: 0,
-            bottom: 100,
+            bottom: 110,
             width: "calc(100% - 48px)",
             right: 24,
             transition: {
@@ -86,7 +87,7 @@ export default function AnimatedMenuMobile({
           exit={{ scale: 0, y: 30, bottom: -30, width: 0, right: 14 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            "fixed isolate z-20 rounded-3xl bg-black/30 p-6 shadow-lg !backdrop-blur-md",
+            "fixed isolate z-20 rounded-4xl bg-black/30 p-6 !backdrop-blur-md",
             className,
           )}
         >
@@ -154,7 +155,10 @@ export default function AnimatedMenuMobile({
                           {/* Mobile Dropdown Mapping */}
                           {(item.dropdownItems && item.dropdownItems.length > 0
                             ? item.dropdownItems
-                            : categories.map((c) => ({ ...c, _type: "category" as const }))
+                            : categories.map((c) => ({
+                                ...c,
+                                _type: "category" as const,
+                              }))
                           ).map((subItem) => (
                             <motion.li variants={liVariants} key={subItem._id}>
                               <Link
@@ -185,6 +189,10 @@ export default function AnimatedMenuMobile({
                   >
                     {item.title.toLowerCase() === "galleri" ? (
                       <ImageIcon />
+                    ) : item.title.toLowerCase() === "kontakt" ? (
+                      <Mail />
+                    ) : item.title.toLowerCase() === "om mig" ? (
+                      <User />
                     ) : (
                       <User />
                     )}
@@ -193,20 +201,6 @@ export default function AnimatedMenuMobile({
                 )}
               </motion.li>
             ))}
-            <motion.li
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
-            >
-              <Link
-                className="text-foreground flex items-center gap-2 py-2 text-lg font-medium tracking-widest uppercase"
-                href="/kontakt"
-                onClick={() => setOpen(false)}
-              >
-                <Contact />
-                Kontakt
-              </Link>
-            </motion.li>
           </ul>
         </motion.div>
       )}

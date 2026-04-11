@@ -38,6 +38,23 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
 
   const slide = slides[activeIndex];
 
+  const handleNextSlide = () => {
+    if (!containerRef.current) return;
+
+    // Räkna ut nästa index: om vi är på sista, gå till 0, annars + 1
+    const nextIndex = activeIndex + 1 >= slides.length ? 0 : activeIndex + 1;
+
+    const scrollAmount = nextIndex * window.innerHeight;
+
+    window.scrollTo({
+      top: scrollAmount,
+      behavior: "smooth",
+    });
+
+    // Vi behöver inte sätta setActiveIndex manuellt här egentligen,
+    // eftersom din ScrollYProgress-useEffect sköter det när scrollen rör sig!
+  };
+
   return (
     <div
       ref={containerRef}
@@ -83,7 +100,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              className="pointer-events-auto absolute right-0 bottom-16 left-0 p-10 md:p-20 lg:bottom-0"
+              className="pointer-events-auto absolute right-0 bottom-24 left-0 p-6 lg:bottom-0 lg:p-20"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -92,17 +109,17 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
               {/*   <p className="mb-3 text-xs font-semibold tracking-[0.4em] text-white/60 uppercase">
                 Portfolio
               </p> */}
-              <h2 className="mb-4 text-5xl font-bold tracking-widest text-white uppercase md:text-7xl">
+              <h2 className="mb-2 text-5xl font-bold tracking-widest text-white uppercase md:text-7xl lg:mb-4">
                 {slide.category.title}
               </h2>
               {slide.category.description && (
-                <p className="mb-8 max-w-md text-base text-white/80 md:text-lg">
+                <p className="mb-4 max-w-md text-base text-white/80 md:text-lg lg:mb-8">
                   {slide.category.description}
                 </p>
               )}
               <Link
                 href={`/galleri/${slide.category.slug}`}
-                className="inline-flex items-center gap-3 border border-white px-8 py-3 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:bg-white hover:text-black"
+                className="inline-flex items-center gap-3 rounded-full border border-white px-8 py-3 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:bg-white hover:text-black"
               >
                 {slide.buttonText || "Se Portfolio"} <span>→</span>
               </Link>
@@ -111,7 +128,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
         </div>
 
         {/* Slide indicators */}
-        <div className="absolute top-1/2 right-8 z-10 flex -translate-y-1/2 flex-col gap-3">
+        <div className="absolute top-1/2 right-8 z-10 hidden -translate-y-1/2 flex-col gap-3 lg:flex">
           {slides.map((_, i) => (
             <div
               key={i}
@@ -121,10 +138,38 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
             />
           ))}
         </div>
+        <div
+          role="button"
+          onClick={handleNextSlide}
+          className="absolute top-1/2 right-6 z-10 flex -translate-y-1/2 flex-col rounded-full bg-black/30 p-1 backdrop-blur-md lg:hidden"
+        >
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className={`pointer-events-none relative h-10 w-5 bg-transparent`}
+            >
+              {i === activeIndex && (
+                <motion.span
+                  layoutId="active-dot"
+                  className="absolute top-0 left-0 h-full w-full rounded-full bg-white"
+                />
+              )}
+              {i === activeIndex && (
+                <motion.span
+                  layoutId="active-number"
+                  className="absolute top-1/2 -left-8 flex -translate-y-1/2 items-center gap-1 whitespace-nowrap"
+                >
+                  {activeIndex + 1}
+                  <span className="h-0.5 w-3 bg-white" />
+                </motion.span>
+              )}
+            </div>
+          ))}
+        </div>
 
         {/* Scroll hint */}
         <motion.div
-          className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 text-white/50"
+          className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1 text-white/50 lg:flex"
           animate={{ opacity: activeIndex === 0 ? 1 : 0 }}
           transition={{ duration: 0.4 }}
         >

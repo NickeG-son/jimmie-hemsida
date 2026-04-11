@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useScroll, useMotionValueEvent } from "motion/react";
+import { useScroll, useMotionValueEvent, motion } from "motion/react";
 import { Button } from "../../ui/button";
 
-import Menu from "./menu";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { MenuIcon } from "lucide-react";
+
+import { House, MenuIcon } from "lucide-react";
 import Logo from "@/app/assets/images/jj-logo.png";
 
 import Image from "next/image";
 import AnimatedMenu from "./animated-menu";
 import AnimatedMenuMobile from "./animated-menu-mobile";
+import { usePathname } from "next/navigation";
+import { InstagramIcon } from "@/app/assets/icons/instagram-icon";
+import { YoutubeIcon } from "@/app/assets/icons/youtube-icon";
 
 interface HeaderProps {
   menuItems: MenuItem[];
@@ -21,6 +23,7 @@ interface HeaderProps {
 }
 
 export default function Header({ menuItems, categories }: HeaderProps) {
+  const isStartPage = usePathname() === "/";
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,20 +41,29 @@ export default function Header({ menuItems, categories }: HeaderProps) {
 
   return (
     <>
-      <Link
-        href="/"
-        className="fixed top-4 left-1/2 z-50 flex size-18 flex-shrink-0 -translate-x-1/2 items-center justify-center overflow-hidden rounded-full bg-white p-3 lg:hidden"
+      <motion.div
+        layout
+        style={{
+          left: isStartPage ? 0 : "auto",
+          right: isStartPage ? 0 : "1rem",
+          margin: isStartPage ? "0 auto" : "0",
+          width: isStartPage ? "4rem" : "52px",
+          height: isStartPage ? "4rem" : "52px",
+        }}
+        className="fixed top-6 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-3 lg:hidden"
       >
-        <Image
-          src={Logo.src}
-          width={100}
-          height={100}
-          alt="Logo"
-          className="object-cover mix-blend-darken"
-        />
-      </Link>
+        <Link href="/">
+          <Image
+            src={Logo.src}
+            width={100}
+            height={100}
+            alt="Logo"
+            className="object-cover mix-blend-darken"
+          />
+        </Link>
+      </motion.div>
       <header
-        className={`fixed right-0 bottom-4 left-0 z-50 mx-4 rounded-full bg-black/20 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8 lg:top-4 lg:bottom-[unset] lg:left-1/2 lg:-translate-x-1/2`}
+        className={`fixed right-0 bottom-4 left-0 z-50 mx-4 rounded-full bg-black/30 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8 lg:top-4 lg:bottom-[unset] lg:left-1/2 lg:-translate-x-1/2`}
       >
         <div
           className={`flex items-center justify-between px-3 py-3 transition-all duration-500`}
@@ -61,12 +73,13 @@ export default function Header({ menuItems, categories }: HeaderProps) {
             href="/"
             className="bg-muted flex size-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-3 text-xl font-bold tracking-widest lg:size-12"
           >
+            <House className="lg:hidden" />
             <Image
               src={Logo.src}
               width={100}
               height={100}
               alt="Logo"
-              className="object-cover invert"
+              className="hidden object-cover invert lg:block"
             />
           </Link>
 
@@ -97,6 +110,20 @@ export default function Header({ menuItems, categories }: HeaderProps) {
             ))}
           </div>
 
+          <Link
+            href="https://www.instagram.com/svensson4x4/"
+            className="bg-muted z-30 flex size-14 flex-shrink-0 flex-col items-center justify-center rounded-full p-1 lg:hidden"
+          >
+            <InstagramIcon className="size-6" />
+          </Link>
+          <Link
+            href="https://www.youtube.com/@Svensson7"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-muted z-30 flex size-14 flex-shrink-0 flex-col items-center justify-center rounded-full p-1 lg:hidden"
+          >
+            <YoutubeIcon className="size-6" />
+          </Link>
           <Button
             variant="link"
             size="icon"
