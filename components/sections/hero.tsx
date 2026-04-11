@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroSlide } from "@/lib/types";
-import { ChevronUp } from "lucide-react";
+import { ArrowRight, ChevronUp, MoveRight } from "lucide-react";
 
 export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +101,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              className="pointer-events-auto absolute right-0 bottom-24 left-0 p-6 lg:bottom-0 lg:p-20"
+              className="pointer-events-auto absolute right-0 bottom-24 left-0 p-4 lg:bottom-0 lg:p-20"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -124,9 +124,10 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
                 onClick={() => {
                   window.scrollTo(0, 0); // Hoppar direkt till 0,0 utan animation
                 }}
-                className="inline-flex items-center gap-3 rounded-full border border-white px-8 py-3 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:border-white/20 hover:bg-white/20 hover:text-white"
+                className="inline-flex items-center gap-3 rounded-full border border-white px-5 py-2 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:border-white/20 hover:bg-white/20 hover:text-white lg:px-8 lg:py-3"
               >
-                {slide.buttonText || "Se Portfolio"} <span>→</span>
+                {slide.buttonText || "Se Portfolio"}{" "}
+                <MoveRight className="size-8" />
               </Link>
             </motion.div>
           </AnimatePresence>
@@ -146,7 +147,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
         <div
           role="button"
           onClick={handleNextSlide}
-          className="absolute top-1/2 right-6 z-10 flex -translate-y-1/2 flex-col rounded-full bg-black/30 p-1 backdrop-blur-md lg:hidden"
+          className="absolute top-1/2 right-4 z-10 flex -translate-y-1/2 flex-col rounded-full bg-black/30 p-1 backdrop-blur-md lg:hidden"
         >
           {slides.map((_, i) => (
             <div

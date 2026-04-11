@@ -78,7 +78,7 @@ export default function ClientContent({
     >
       <div
         className={cn(
-          "h-full w-full px-4 pt-8.5 pb-26 transition-opacity duration-300 lg:px-8 lg:pt-24 lg:pb-8",
+          "h-full w-full px-4 pt-7 pb-26 transition-opacity duration-300 lg:px-8 lg:pt-24 lg:pb-8",
           detaildId ? "pointer-events-none opacity-0" : "opacity-100",
         )}
       >
@@ -88,7 +88,7 @@ export default function ClientContent({
 
         <Link
           href="/galleri"
-          className="bg-muted hover:bg-input/50 fixed top-6 left-4 z-10 flex min-h-13 w-fit min-w-13 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full px-2 py-2 text-sm tracking-widest uppercase backdrop-blur-md transition-colors duration-300 hover:!no-underline lg:absolute lg:top-23 lg:left-8 lg:px-4 lg:py-4"
+          className="bg-muted hover:bg-input/50 fixed top-4 left-4 z-10 flex min-h-13 w-fit min-w-13 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full px-2 py-2 text-sm tracking-widest uppercase backdrop-blur-md transition-colors duration-300 hover:!no-underline lg:absolute lg:top-23 lg:left-8 lg:px-4 lg:py-4"
         >
           <ArrowLeftIcon className="size-5" />
           <span className="hidden lg:flex">Tillbaka till Galleri</span>

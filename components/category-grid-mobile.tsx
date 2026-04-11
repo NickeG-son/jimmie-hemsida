@@ -4,7 +4,6 @@ import { urlFor } from "@/sanity/client";
 import { GalleryImage } from "@/lib/types";
 import { LayoutGrid, Maximize, Square } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
 
 const variantItem = {
   hidden: { opacity: 0, y: 40 },
@@ -30,7 +29,7 @@ export default function CategoryGrid({
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="bg-muted fixed right-7 bottom-[105px] z-10 ml-auto flex size-13 cursor-pointer items-center justify-center rounded-full"
+        className="bg-muted fixed right-6 bottom-[95px] z-10 ml-auto flex size-13 cursor-pointer items-center justify-center rounded-full"
         onClick={() => {
           if (layout === "list") setLayout("grid");
           else setLayout("list");
@@ -88,7 +87,7 @@ export default function CategoryGrid({
               fill
               className="object-cover"
             />
-            <Maximize className="absolute top-4 right-4 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
+            <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
           </motion.div>
         ))}
       </motion.div>

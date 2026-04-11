@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { useScroll, useMotionValueEvent, motion } from "motion/react";
 import { Button } from "../../ui/button";
-
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
-
 import { House, MenuIcon } from "lucide-react";
 import Logo from "@/app/assets/images/jj-logo.png";
-
+import LogoWhite from "@/app/assets/images/jj-logo-white.png";
 import Image from "next/image";
 import AnimatedMenu from "./animated-menu";
 import AnimatedMenuMobile from "./animated-menu-mobile";
@@ -52,7 +50,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           width: isStartPage ? "4rem" : "52px",
           height: isStartPage ? "4rem" : "52px",
         }}
-        className="fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-3 lg:hidden"
+        className="fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/30 p-3 backdrop-blur-md lg:hidden"
       >
         <Link
           href="/"
@@ -62,11 +60,11 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           scroll={false}
         >
           <Image
-            src={Logo.src}
+            src={LogoWhite.src}
             width={100}
             height={100}
             alt="Logo"
-            className="object-cover mix-blend-darken"
+            className="object-cover"
           />
         </Link>
       </motion.div>
@@ -87,11 +85,11 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           >
             <House className="lg:hidden" />
             <Image
-              src={Logo.src}
+              src={LogoWhite.src}
               width={100}
               height={100}
               alt="Logo"
-              className="hidden object-cover invert lg:block"
+              className="hidden object-cover lg:block"
             />
           </Link>
 
