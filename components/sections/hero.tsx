@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroSlide } from "@/lib/types";
+import { ChevronUp } from "lucide-react";
 
 export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,7 +120,11 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
               )}
               <Link
                 href={`/galleri/${slide.category.slug}`}
-                className="inline-flex items-center gap-3 rounded-full border border-white px-8 py-3 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:bg-white hover:text-black"
+                scroll={false} // Hindrar Next.js från att sköta scrollen automatiskt
+                onClick={() => {
+                  window.scrollTo(0, 0); // Hoppar direkt till 0,0 utan animation
+                }}
+                className="inline-flex items-center gap-3 rounded-full border border-white px-8 py-3 text-sm font-semibold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:border-white/20 hover:bg-white/20 hover:text-white"
               >
                 {slide.buttonText || "Se Portfolio"} <span>→</span>
               </Link>
@@ -132,8 +137,8 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
           {slides.map((_, i) => (
             <div
               key={i}
-              className={`h-[2px] transition-all duration-500 ${
-                i === activeIndex ? "w-10 bg-white" : "w-4 bg-white/40"
+              className={`h-[4px] rounded-full transition-all duration-500 ${
+                i === activeIndex ? "w-12 bg-white" : "w-6 bg-white/40"
               }`}
             />
           ))}
@@ -180,7 +185,76 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
+        <MobileScrollIndicator activeIndex={activeIndex} />
       </div>
     </div>
+  );
+}
+
+interface MobileScrollIndicatorProps {
+  activeIndex: number;
+}
+
+function MobileScrollIndicator({ activeIndex }: MobileScrollIndicatorProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  // Nytt tillstånd för att hålla koll på om den någonsin har visats
+  const [hasBeenShown, setHasBeenShown] = useState(false);
+
+  useEffect(() => {
+    // Visa bara indikatorn om:
+    // 1. Vi är på första sliden
+    // 2. Den INTE har visats tidigare under denna session
+    if (activeIndex === 0 && !hasBeenShown) {
+      setIsVisible(true);
+      setHasBeenShown(true); // Markera omedelbart som visad
+
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    } else if (activeIndex !== 0) {
+      // Om användaren scrollar ner innan timern gått ut, dölj den
+      setIsVisible(false);
+    }
+  }, [activeIndex, hasBeenShown]); // Lägg till hasBeenShown i dependency-arrayen
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center lg:hidden"
+        >
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-16 w-16 animate-ping rounded-full bg-white/40" />
+
+              <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/20 backdrop-blur-md">
+                <motion.div
+                  animate={{
+                    y: [8, -8, 8],
+                    opacity: [0.3, 1, 0.3],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ChevronUp className="size-6 text-white" />
+                </motion.div>
+              </div>
+            </div>
+
+            <span className="rounded-full bg-black/30 px-3 py-1.5 text-[10px] font-bold tracking-widest text-white uppercase backdrop-blur-md">
+              Svep uppåt
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

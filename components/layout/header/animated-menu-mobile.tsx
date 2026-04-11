@@ -152,30 +152,55 @@ export default function AnimatedMenuMobile({
                           transition={{ duration: 0.2 }}
                           className="grid w-[300px]"
                         >
-                          {/* Mobile Dropdown Mapping */}
-                          {(item.dropdownItems && item.dropdownItems.length > 0
-                            ? item.dropdownItems
-                            : categories.map((c) => ({
-                                ...c,
-                                _type: "category" as const,
-                              }))
-                          ).map((subItem) => (
-                            <motion.li variants={liVariants} key={subItem._id}>
+                          <>
+                            <motion.li key="seAll" variants={liVariants}>
                               <Link
-                                href={
-                                  subItem._type === "category"
-                                    ? `/galleri/${subItem.slug}`
-                                    : `/${subItem.slug}`
-                                }
-                                onClick={() => setOpen(false)}
-                                className="flex w-full rounded-md px-6 py-4 no-underline transition-colors outline-none select-none"
+                                href={item.link || "#"}
+                                onClick={() => {
+                                  setOpen(false);
+                                  window.scrollTo(0, 0);
+                                }}
+                                scroll={false}
+                                className="flex px-2 py-2 no-underline transition-colors outline-none select-none"
                               >
-                                <div className="text-base leading-none font-medium">
-                                  {subItem.title}
+                                <div className="bg-muted/30 flex w-fit rounded-full px-4 py-2 text-base leading-none font-medium">
+                                  Se allt i {item.title}
                                 </div>
                               </Link>
                             </motion.li>
-                          ))}
+                            {/* Mobile Dropdown Mapping */}
+                            {(item.dropdownItems &&
+                            item.dropdownItems.length > 0
+                              ? item.dropdownItems
+                              : categories.map((c) => ({
+                                  ...c,
+                                  _type: "category" as const,
+                                }))
+                            ).map((subItem) => (
+                              <motion.li
+                                variants={liVariants}
+                                key={subItem._id}
+                              >
+                                <Link
+                                  href={
+                                    subItem._type === "category"
+                                      ? `/galleri/${subItem.slug}`
+                                      : `/${subItem.slug}`
+                                  }
+                                  onClick={() => {
+                                    setOpen(false);
+                                    window.scrollTo(0, 0);
+                                  }}
+                                  scroll={false}
+                                  className="flex w-full rounded-md px-6 py-4 no-underline transition-colors outline-none select-none"
+                                >
+                                  <div className="text-base leading-none font-medium">
+                                    {subItem.title}
+                                  </div>
+                                </Link>
+                              </motion.li>
+                            ))}
+                          </>
                         </motion.ul>
                       )}
                     </AnimatePresence>

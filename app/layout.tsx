@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat, Syne } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layout/header/header";
@@ -14,6 +14,14 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
@@ -53,7 +61,7 @@ export default async function RootLayout({
     <>
       <html
         lang="sv"
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        className={`${montserrat.variable} ${syne.variable} h-full antialiased`}
         suppressHydrationWarning
       >
         <body className="bg-background flex h-dvh flex-col">

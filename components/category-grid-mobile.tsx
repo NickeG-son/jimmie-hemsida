@@ -27,10 +27,10 @@ export default function CategoryGrid({
 
   return (
     <div className="flex flex-col gap-4 pt-4">
-      <Button
-        variant="outline"
-        size="icon"
-        className="bg-muted sticky top-12 ml-auto size-13 cursor-pointer"
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        className="bg-muted fixed right-7 bottom-[105px] z-10 ml-auto flex size-13 cursor-pointer items-center justify-center rounded-full"
         onClick={() => {
           if (layout === "list") setLayout("grid");
           else setLayout("list");
@@ -57,7 +57,7 @@ export default function CategoryGrid({
             </motion.span>
           )}
         </AnimatePresence>
-      </Button>
+      </motion.button>
 
       <motion.div
         variants={{
@@ -71,7 +71,7 @@ export default function CategoryGrid({
         }}
         initial={skipAnimation ? "visible" : "hidden"}
         animate="visible"
-        className={`grid gap-4 lg:gap-8 ${layout === "list" ? "grid-cols-1" : "grid-cols-2 lg:grid-cols-3"}`}
+        className={`grid gap-6 ${layout === "list" ? "grid-cols-1" : "grid-cols-2"}`}
       >
         {images.map((image: GalleryImage) => (
           <motion.div

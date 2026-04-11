@@ -63,7 +63,7 @@ export default function AnimatedMenu({
           onMouseLeave={() => setOpen("")}
           style={{ left: xPos ? `${xPos}px` : "50%" }}
           className={cn(
-            "fixed top-[95px] z-40 min-w-[200px] -translate-x-1/2 rounded-3xl bg-black/20 p-4 pt-4 shadow-lg backdrop-blur-md before:absolute before:inset-x-0 before:-top-10 before:h-12 before:bg-transparent",
+            "fixed top-[90px] z-40 min-w-[200px] -translate-x-1/2 rounded-3xl bg-black/20 p-3 shadow-lg backdrop-blur-md before:absolute before:inset-x-0 before:-top-10 before:h-12 before:bg-transparent",
             className,
           )}
         >
@@ -87,7 +87,7 @@ export default function AnimatedMenu({
                       : `/${item.slug}`
                   }
                   onClick={() => setOpen("")}
-                  className="flex w-full rounded-md px-6 py-3 no-underline transition-colors hover:bg-white/20"
+                  className="flex w-full rounded-xl px-6 py-3 no-underline transition-colors hover:bg-white/20"
                 >
                   <div className="text-base leading-none font-medium text-white">
                     {item.title}

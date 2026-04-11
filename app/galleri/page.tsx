@@ -14,7 +14,7 @@ export default async function GalleriRootPage() {
   `);
 
   return (
-    <div className="w-full lg:py-24">
+    <div className="w-full lg:pt-24 lg:pb-12">
       <h1 className="mb-4 hidden justify-center text-center text-2xl font-bold tracking-widest uppercase lg:flex lg:text-5xl">
         Kategorier
       </h1>

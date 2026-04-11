@@ -160,7 +160,7 @@ export default function GalleryCarousel({
           ))}
         </CarouselContent>
 
-        <div className="absolute bottom-[160px] left-1/2 z-10 flex -translate-x-1/2 overflow-hidden rounded-full bg-black/20 px-4 py-1.5 backdrop-blur-md">
+        <div className="absolute bottom-[160px] left-1/2 z-10 flex -translate-x-1/2 overflow-hidden rounded-full bg-black/20 px-4 py-1.5 backdrop-blur-md lg:hidden">
           <AnimatePresence mode="popLayout">
             {activeTitle ? (
               <motion.h2
@@ -177,10 +177,16 @@ export default function GalleryCarousel({
           </AnimatePresence>
         </div>
         <div className="absolute bottom-[110px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center justify-center gap-1 overflow-hidden rounded-full bg-black/20 p-1.5 backdrop-blur-md lg:relative lg:bottom-0 lg:left-0 lg:mx-auto lg:mt-4 lg:-translate-x-0 lg:bg-transparent lg:p-0">
-          <div className="flex items-center gap-2">
-            <CarouselPrevious className="" absolute={false} />
+          <div className="flex items-center gap-2 lg:gap-3">
+            <CarouselPrevious
+              className="lg:size-10 lg:[&_svg]:!size-6"
+              absolute={false}
+            />
             <CarouselDots />
-            <CarouselNext absolute={false} />
+            <CarouselNext
+              className="lg:size-10 lg:[&_svg]:!size-6"
+              absolute={false}
+            />
           </div>
         </div>
       </Carousel>

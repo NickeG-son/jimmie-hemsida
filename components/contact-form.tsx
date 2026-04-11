@@ -17,7 +17,10 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ error?: string; success?: boolean } | null>(null);
+  const [message, setMessage] = useState<{
+    error?: string;
+    success?: boolean;
+  } | null>(null);
 
   const form = useForm<z.infer<typeof contactSchema>>({
     // Move the 'as any' inside the parentheses!
@@ -49,8 +52,10 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="mx-auto mt-16 w-full max-w-2xl space-y-6 rounded-2xl border border-gray-200 bg-gray-50 p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-      <h3 className="text-center text-2xl font-bold tracking-widest uppercase">Skicka In Förfrågan</h3>
+    <div className="mx-auto mt-10 w-full max-w-2xl space-y-6 rounded-4xl border border-gray-200 bg-gray-50 p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <h3 className="text-center text-2xl font-bold tracking-widest uppercase">
+        Skicka In Förfrågan
+      </h3>
 
       {message?.error && (
         <div className="rounded-lg border border-red-200 bg-red-100/50 p-4 text-sm font-medium text-red-600">
@@ -123,7 +128,12 @@ export default function ContactForm() {
           )}
         />
 
-        <Button type="submit" className="mt-8 w-full font-bold tracking-widest uppercase" disabled={loading} size="lg">
+        <Button
+          type="submit"
+          className="mt-8 w-full font-bold tracking-widest uppercase"
+          disabled={loading}
+          size="lg"
+        >
           {loading ? "SKICKAR..." : "SKICKA"}
         </Button>
       </form>

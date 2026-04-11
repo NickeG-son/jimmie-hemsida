@@ -293,7 +293,7 @@ function CarouselDots({
           type="button"
           aria-label={`Go to slide ${index + 1}`}
           animate={{
-            width: index === selectedIndex ? "1rem" : "0.375rem",
+            width: index === selectedIndex ? "1.5rem" : "0.375rem",
             backgroundColor:
               index === selectedIndex ? "var(--primary)" : "var(--primary)", // Example color logic
             opacity: index === selectedIndex ? 1 : 0.4,

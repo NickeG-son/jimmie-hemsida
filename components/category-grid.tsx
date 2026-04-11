@@ -79,14 +79,14 @@ export default function CategoryGrid({
             layoutId={`photo-${image.slug}`}
             key={image._id}
             variants={variantItem}
-            className="relative aspect-square w-full cursor-pointer overflow-hidden rounded-4xl"
+            className="group relative aspect-square w-full cursor-pointer overflow-hidden rounded-4xl"
             onClick={() => setDetaildId(image.slug)}
           >
             <Image
               src={urlFor(image.mainImage).width(1920).height(1080).url()}
               alt={image.title}
               fill
-              className="object-cover"
+              className="object-cover transition-all duration-300 group-hover:scale-105"
             />
             <Maximize className="absolute top-4 right-4 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
           </motion.div>

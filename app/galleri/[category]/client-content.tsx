@@ -192,7 +192,7 @@ export default function ClientContent({
                 className="pointer-events-none absolute inset-0 z-10 flex flex-col p-4 lg:p-8"
               >
                 {/* Top Bar: Close Button */}
-                <div className="flex w-full flex-col justify-start gap-4 lg:absolute lg:top-23 lg:left-8 lg:flex-row">
+                <div className="flex w-full flex-col justify-start gap-2 lg:absolute lg:top-23 lg:left-8 lg:flex-row">
                   <Button
                     variant="ghost"
                     onClick={() => setDetaildId(null)}
@@ -227,7 +227,7 @@ export default function ClientContent({
                         className="pointer-events-auto absolute top-4 right-4 flex w-fit flex-col items-start gap-4 lg:top-28 lg:right-12 lg:bottom-12 lg:w-[400px] lg:items-stretch lg:justify-start lg:gap-8"
                       >
                         {/* Text Box */}
-                        <div className="flex w-full flex-col rounded-3xl bg-black/40 p-6 text-white backdrop-blur-md lg:flex-1 lg:p-10">
+                        <div className="flex w-full flex-col rounded-4xl bg-black/40 p-6 text-white backdrop-blur-md lg:flex-1 lg:p-10">
                           <h1 className="text-sm font-bold tracking-widest uppercase lg:mt-4 lg:text-3xl">
                             {detaildPhoto.title || detaildPhoto.slug}
                           </h1>

@@ -16,6 +16,7 @@ import AnimatedMenuMobile from "./animated-menu-mobile";
 import { usePathname } from "next/navigation";
 import { InstagramIcon } from "@/app/assets/icons/instagram-icon";
 import { YoutubeIcon } from "@/app/assets/icons/youtube-icon";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   menuItems: MenuItem[];
@@ -29,6 +30,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [laptopMenuOpen, setLaptopMenuOpen] = useState<string>("");
   const [dropdownX, setDropdownX] = useState(0);
+  const [linkIsHovered, setLinkIsHovered] = useState("");
 
   // useMotionValueEvent är det moderna sättet att lyssna på värden
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -50,9 +52,15 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           width: isStartPage ? "4rem" : "52px",
           height: isStartPage ? "4rem" : "52px",
         }}
-        className="fixed top-6 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-3 lg:hidden"
+        className="fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-3 lg:hidden"
       >
-        <Link href="/">
+        <Link
+          href="/"
+          onClick={() => {
+            window.scrollTo(0, 0);
+          }}
+          scroll={false}
+        >
           <Image
             src={Logo.src}
             width={100}
@@ -66,11 +74,15 @@ export default function Header({ menuItems, categories }: HeaderProps) {
         className={`fixed right-0 bottom-4 left-0 z-50 mx-4 rounded-full bg-black/30 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8 lg:top-4 lg:bottom-[unset] lg:left-1/2 lg:-translate-x-1/2`}
       >
         <div
-          className={`flex items-center justify-between px-3 py-3 transition-all duration-500`}
+          className={`flex items-center justify-between px-2 py-2 transition-all duration-500`}
         >
           {/* Logo */}
           <Link
             href="/"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+            scroll={false}
             className="bg-muted flex size-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-3 text-xl font-bold tracking-widest lg:size-12"
           >
             <House className="lg:hidden" />
@@ -94,18 +106,31 @@ export default function Header({ menuItems, categories }: HeaderProps) {
                     const rect = e.currentTarget.getBoundingClientRect();
                     setDropdownX(rect.left + rect.width / 2);
                     setLaptopMenuOpen(item._id);
-                  }
+                  } else setLinkIsHovered(item._id);
                 }}
-                onMouseLeave={
-                  item.isDropdown ? () => setLaptopMenuOpen("") : undefined
-                }
-                className={
+                onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  if (item.isDropdown) {
+                    setLaptopMenuOpen("");
+                  } else setLinkIsHovered("");
+                }}
+                className={cn(
+                  "",
                   item.isDropdown
-                    ? "relative before:absolute before:inset-x-0 before:-bottom-12 before:h-12 before:bg-transparent"
-                    : ""
-                }
+                    ? "relative text-lg before:absolute before:inset-x-0 before:-bottom-12 before:h-12 before:bg-transparent"
+                    : "relative",
+                )}
               >
                 {item.title}
+                {!item.isDropdown && linkIsHovered === item._id && (
+                  <motion.span
+                    className="absolute -bottom-2 left-0 h-[1px] bg-white"
+                    initial={{ scaleX: 0, width: "100%" }}
+                    animate={{ scaleX: 1 }}
+                    exit={{ scaleX: 0 }}
+                    style={{ originX: 0.5 }} // 0.5 betyder 50% (mitten)
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                  />
+                )}
               </Link>
             ))}
           </div>
