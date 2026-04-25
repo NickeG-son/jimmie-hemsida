@@ -7,25 +7,33 @@ export default defineType({
   fields: [
     defineField({
       name: "title",
-      title: "Page Title",
+      title: "Sidrubrik",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: 'e.g., "Om mig" or "Priser"',
+      description: "t.ex. 'Om mig' eller 'Priser'",
     }),
     defineField({
       name: "slug",
-      title: "URL Slug",
+      title: "URL-länk",
       type: "slug",
       options: {
         source: "title", // If he types "Om mig", it auto-generates "/om-mig"!
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
-      description: "This uniquely defines the URL of the page.",
+      description: "Denna definierar unikt sidans URL.",
     }),
     defineField({
       name: "mainImage",
-      title: "Header Image (Optional)",
+      title: "Omslagsbild (Frivillig)",
+      type: "image",
+      options: {
+        hotspot: true, // Let him crop the face!
+      },
+    }),
+    defineField({
+      name: "mobileImage",
+      title: "Mobil Omslagsbild (Frivillig)",
       type: "image",
       options: {
         hotspot: true, // Let him crop the face!
@@ -33,7 +41,7 @@ export default defineType({
     }),
     defineField({
       name: "body",
-      title: "Body Text",
+      title: "Brödtext",
       type: "array",
       // By putting 'block' here, Sanity instantly gives him a huge rich-text editor
       // with B, I, U, Lists, H1, H2, Quotes! He can even inject images between paragraphs.
@@ -43,16 +51,18 @@ export default defineType({
       name: "socialLinks",
       title: "Sociala Medier",
       type: "array",
-      description: "Lägg till sociala medier-konton. Varje länk visas med rätt ikon på kontaktsidan.",
+      description:
+        "Lägg till sociala medier-konton. Varje länk visas med rätt ikon på kontaktsidan.",
       of: [
         {
           type: "object",
           fields: [
             defineField({
               name: "platform",
-              title: "Platform",
+              title: "Plattform",
               type: "string",
-              description: "Välj vilken plattform det är — ikonen väljs automatiskt.",
+              description:
+                "Välj vilken plattform det är — ikonen väljs automatiskt.",
               options: {
                 list: [
                   { title: "Instagram", value: "instagram" },
@@ -74,7 +84,7 @@ export default defineType({
               title: "Länk (URL)",
               type: "url",
               validation: (Rule) => Rule.required(),
-              description: "e.g., https://www.instagram.com/jimmiefoto",
+              description: "t.ex. https://www.instagram.com/jimmiefoto",
             }),
           ],
           preview: {

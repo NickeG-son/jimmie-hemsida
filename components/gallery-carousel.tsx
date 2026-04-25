@@ -171,7 +171,7 @@ export default function GalleryCarousel({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: direction === 1 ? -50 : 50 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-lg font-bold tracking-widest text-white uppercase"
+                className="uppercas text-lg font-bold tracking-widest whitespace-nowrap text-white"
               >
                 {activeTitle}
               </motion.h2>

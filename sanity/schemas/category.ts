@@ -7,13 +7,13 @@ export default defineType({
   fields: [
     defineField({
       name: "title",
-      title: "Title",
+      title: "Titel",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "slug",
-      title: "Slug",
+      title: "URL-länk",
       type: "slug",
       options: {
         source: "title",
@@ -23,14 +23,22 @@ export default defineType({
     }),
     defineField({
       name: "description",
-      title: "Description",
+      title: "Beskrivning",
       type: "text",
     }),
     defineField({
       name: "mainImage",
-      title: "Category Cover Image",
+      title: "Omslagsbild för kategori",
       type: "image",
       options: { hotspot: true },
+    }),
+    defineField({
+      name: "isAggregated",
+      title: "Aggregerad kategori (visa alla bilder)",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "Om aktiverad visas bilder från ALLA kategorier i denna kategori, utan att du behöver lägga till dem manuellt. Använd för t.ex. 'Alla fotografier'.",
     }),
   ],
 });

@@ -37,6 +37,7 @@ export default async function KontaktPage() {
     `*[_type == "page" && slug.current == "kontakt"][0]{
       title,
       mainImage,
+      mobileImage,
       body,
       socialLinks,
     }`,

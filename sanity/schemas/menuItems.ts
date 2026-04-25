@@ -10,33 +10,33 @@ export default defineType({
       title: "Titel",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: 'e.g., "Om Mig" or "Galleri"',
+      description: "t.ex. 'Om Mig' eller 'Galleri'",
     }),
     defineField({
       name: "link",
-      title: "Link URL",
+      title: "URL-länk",
       type: "string",
       description:
-        'e.g., "/om-mig" or "/kontakt". (Leave blank if this is just a Dropdown trigger)',
+        "t.ex. '/om-mig' eller '/kontakt'. (Lämna tomt om detta bara är en flik med rullgardinsmeny)",
     }),
     defineField({
       name: "isDropdown",
-      title: "Has Dropdown Menu?",
+      title: "Har en rullgardinsmeny?",
       type: "boolean",
       initialValue: false,
       description:
-        "If turned ON, you can add specific Categories or Pages below to be displayed in the dropdown menu.",
+        "Om ikryssad, kan du lägga till specifika Kategorier eller Sidor nedan som ska visas i rullgardinsmenyn.",
     }),
     defineField({
       name: "order",
-      title: "Order (1, 2, 3...)",
+      title: "Ordning (1, 2, 3...)",
       type: "number",
       validation: (Rule) => Rule.required(),
-      description: "Used to sort the menu items from left to right.",
+      description: "Används för att sortera menyvalen från vänster till höger.",
     }),
     defineField({
       name: "dropdownItems",
-      title: "Dropdown Items",
+      title: "Menyval i rullgardinen",
       type: "array",
       of: [{ type: "reference", to: [{ type: "category" }, { type: "page" }] }],
       hidden: ({ parent }) => !parent.isDropdown, // Only show if isDropdown is true

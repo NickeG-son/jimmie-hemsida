@@ -7,8 +7,8 @@ export default defineType({
   fieldsets: [
     {
       name: "cameraSettings",
-      title: "Camera Settings",
-      description: "e.g., ISO 100, f/1.8, 1/200s",
+      title: "Kamerainställningar",
+      description: "t.ex. ISO 100, f/1.8, 1/200s",
       options: {
         collapsible: true, // Gör att man kan fälla ihop rubriken
         collapsed: false, // Den är öppen som standard
@@ -18,13 +18,13 @@ export default defineType({
   fields: [
     defineField({
       name: "title",
-      title: "Title",
+      title: "Titel",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "slug",
-      title: "Slug",
+      title: "URL-länk",
       type: "slug",
       options: {
         source: "title",
@@ -33,12 +33,12 @@ export default defineType({
     }),
     defineField({
       name: "referenceId",
-      title: "Reference ID",
+      title: "Referens-ID",
       type: "string",
     }),
     defineField({
       name: "image",
-      title: "Image",
+      title: "Bild",
       type: "image",
       options: {
         hotspot: true, // Allows him to crop/focus the image in the admin panel!
@@ -47,24 +47,24 @@ export default defineType({
     }),
     defineField({
       name: "category",
-      title: "Category",
+      title: "Kategori",
       type: "reference",
       to: [{ type: "category" }], // This links it to the Category schema!
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "description",
-      title: "Description",
+      title: "Beskrivning",
       type: "text",
     }),
     defineField({
       name: "productInfo",
-      title: "Product Info",
+      title: "Produktinformation",
       type: "string",
     }),
     defineField({
       name: "location",
-      title: "Location",
+      title: "Plats",
       type: "string",
     }),
     defineField({
@@ -75,13 +75,13 @@ export default defineType({
     }),
     defineField({
       name: "aperture",
-      title: "Aperture",
+      title: "Bländare",
       type: "string",
       fieldset: "cameraSettings",
     }),
     defineField({
       name: "shutterSpeed",
-      title: "Shutter Speed",
+      title: "Slutartid",
       type: "string",
       fieldset: "cameraSettings",
     }),

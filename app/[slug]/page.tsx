@@ -16,6 +16,7 @@ export default async function GenericPage({
     `*[_type == "page" && slug.current == $slug][0]{
       title,
       mainImage,
+      mobileImage,
       body,
     }`,
     { slug },
@@ -69,7 +70,14 @@ export default async function GenericPage({
           <Image
             src={urlFor(page.mainImage).width(1600).height(700).url()}
             alt={page.title}
-            className="aspect-square w-full object-cover lg:aspect-[unset] lg:w-screen"
+            className="hidden aspect-[unset] w-screen object-cover lg:flex"
+            width={1920}
+            height={1080}
+          />
+          <Image
+            src={urlFor(page.mobileImage).width(1600).height(700).url()}
+            alt={page.title}
+            className="flex aspect-square w-full object-cover lg:hidden"
             width={1920}
             height={1080}
           />

@@ -1,8 +1,6 @@
 import { client } from "../../../sanity/client";
 import ClientContent from "./client-content";
 
-const ALL_IMAGES_SLUG = "alla-bilder";
-
 export default async function GalleryCategoryPage({
   params,
 }: {
@@ -10,34 +8,31 @@ export default async function GalleryCategoryPage({
 }) {
   const { category } = await params;
 
-  const isAllImages = category === ALL_IMAGES_SLUG;
+  // Fetch the category to check if it's an aggregated "show all" category
+  const categoryDoc = await client.fetch<{ _id: string; isAggregated?: boolean } | null>(
+    `*[_type == "category" && slug.current == $category][0]{ _id, isAggregated }`,
+    { category }
+  );
 
-  // When visiting "alla-bilder" we skip the category filter and return everything.
+  const isAggregated = categoryDoc?.isAggregated === true;
+
+  const imageQuery = `{
+    _id,
+    title,
+    "slug": slug.current,
+    "mainImage": image,
+    referenceId,
+    description,
+    iso,
+    aperture,
+    shutterSpeed,
+  }`;
+
   const images = await client.fetch(
-    isAllImages
-      ? `*[_type == "galleryImage"] | order(_createdAt desc) {
-          _id,
-          title,
-          "slug": slug.current,
-          "mainImage": image,
-          referenceId,
-          description,
-          iso,
-          aperture,
-          shutterSpeed,
-        }`
-      : `*[_type == "galleryImage" && category->slug.current == $category]{
-          _id,
-          title,
-          "slug": slug.current,
-          "mainImage": image,
-          referenceId,
-          description,
-          iso,
-          aperture,
-          shutterSpeed,
-        }`,
-    isAllImages ? {} : { category },
+    isAggregated
+      ? `*[_type == "galleryImage"] | order(_createdAt desc) ${imageQuery}`
+      : `*[_type == "galleryImage" && category->slug.current == $category] ${imageQuery}`,
+    isAggregated ? {} : { category },
   );
 
   return <ClientContent images={images} category={category} />;

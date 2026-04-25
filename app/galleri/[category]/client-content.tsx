@@ -38,6 +38,7 @@ export default function ClientContent({
   const [hasOpenedPhoto, setHasOpenedPhoto] = useState(false);
   const [isPortrait, setIsPortrait] = useState(false);
   const [hideUi, setHideUi] = useState(false);
+  const [hideUiIfNoContent, setHideUiIfNoContent] = useState(false);
   const [showRotateIndicator, setShowRotateIndicator] = useState(false);
   const isMobile = useIsMobile();
   const sessionAllows = useSessionIndicator("hint-rotate-phone");
@@ -74,11 +75,22 @@ export default function ClientContent({
     }
   }, []);
 
+  useEffect(() => {
+    if (detaildId) {
+      setHideUiIfNoContent(
+        !detaildPhoto?.description &&
+          !detaildPhoto?.iso &&
+          !detaildPhoto?.aperture &&
+          !detaildPhoto?.shutterSpeed,
+      );
+    }
+  }, [detaildId]);
+
   return (
     <div
       className={cn(
-        "relative min-h-[100dvh] w-full overflow-hidden lg:h-dvh",
-        detaildId ? "" : "h-full w-full",
+        "relative w-full",
+        detaildId ? "min-h-[100dvh] overflow-hidden lg:h-dvh" : "h-full w-full",
       )}
     >
       <div
@@ -207,17 +219,19 @@ export default function ClientContent({
                       <ArrowLeftIcon className="size-5" />
                       <span className="hidden lg:flex">Tillbaka</span>
                     </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => setHideUi(!hideUi)}
-                      className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
-                    >
-                      {hideUi ? (
-                        <InfoIcon className="size-5" />
-                      ) : (
-                        <EyeOff className="size-5" />
-                      )}
-                    </Button>
+                    {!hideUiIfNoContent && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => setHideUi(!hideUi)}
+                        className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
+                      >
+                        {hideUi ? (
+                          <InfoIcon className="size-5" />
+                        ) : (
+                          <EyeOff className="size-5" />
+                        )}
+                      </Button>
+                    )}
                   </div>
                   {detaildPhoto.referenceId && (
                     <Button
@@ -267,7 +281,7 @@ export default function ClientContent({
 
                 {/* Bottom / Right Layout */}
                 <AnimatePresence>
-                  {!hideUi && (
+                  {!hideUi && !hideUiIfNoContent && (
                     <>
                       <motion.div
                         initial={{ opacity: 0, x: 40 }}

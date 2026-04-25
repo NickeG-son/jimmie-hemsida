@@ -174,11 +174,15 @@ export default function ContactForm() {
                       </span>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger>
+                          <TooltipTrigger
+                            type="button"
+                            onClick={(e) => e.preventDefault()}
+                          >
                             <Info size={16} />
                           </TooltipTrigger>
                           <TooltipContent
-                            side="right"
+                            side="top"
+                            align="center"
                             className="bg-muted max-w-xs rounded-full text-white"
                           >
                             <p>

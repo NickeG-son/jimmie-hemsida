@@ -7,34 +7,34 @@ export default defineType({
   fields: [
     defineField({
       name: "category",
-      title: "Linked Category",
+      title: "Länkad kategori",
       type: "reference",
       to: [{ type: "category" }],
       validation: (Rule) => Rule.required(),
       description:
-        "Pick a category — the title and description will be shown automatically.",
+        "Välj en kategori — titel och beskrivning visas automatiskt.",
     }),
     defineField({
       name: "heroImage",
-      title: "Hero Image",
+      title: "Omslagsbild",
       type: "image",
       options: { hotspot: true },
       validation: (Rule) => Rule.required(),
       description:
-        "Full-screen image for this slide. Best in landscape / wide format.",
+        "Helskärmsbild för denna sektion. Bäst i liggande / brett format.",
     }),
     defineField({
       name: "buttonText",
-      title: "Knapp text",
+      title: "Knapptext",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: "Text on the button.",
+      description: "Texten på knappen.",
     }),
     defineField({
       name: "order",
-      title: "Order",
+      title: "Ordning",
       type: "number",
-      description: "Lower number = appears first. e.g., 1, 2, 3...",
+      description: "Lägre siffra = visas först. t.ex. 1, 2, 3...",
       validation: (Rule) => Rule.required(),
     }),
   ],
@@ -44,9 +44,9 @@ export default defineType({
       media: "heroImage",
       order: "order",
     },
-    prepare({ title, media, order }) {
+      prepare({ title, media, order }) {
       return {
-        title: `${order}. ${title ?? "No category selected"}`,
+        title: `${order}. ${title ?? "Ingen kategori vald"}`,
         media,
       };
     },

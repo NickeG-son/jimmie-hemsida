@@ -70,42 +70,42 @@ export default function AnimatedMenuMobile({
     <AnimatePresence mode="wait">
       {open && (
         <motion.div
-          initial={{ scale: 0, y: 30, bottom: -30, width: 0, right: 14 }}
+          initial={{ bottom: 24, right: 24, width: 56, height: 56, borderRadius: 28, opacity: 0 }}
           animate={{
-            scale: 1,
-            y: 0,
-            bottom: 100,
-            width: "calc(100% - 48px)",
-            right: 24,
+            width: "calc(100% - 32px)",
+            height: "auto",
+            bottom: 104,
+            right: 16,
+            borderRadius: 32,
+            opacity: 1,
             transition: {
-              duration: 0.2,
               type: "spring",
               stiffness: 500,
               damping: 30,
               mass: 1,
             },
           }}
-          exit={{ scale: 0, y: 30, bottom: -30, width: 0, right: 14 }}
-          transition={{ duration: 0.2 }}
+          exit={{ bottom: 24, right: 24, width: 56, height: 56, borderRadius: 28, opacity: 0 }}
           className={cn(
-            "fixed isolate z-20 rounded-4xl bg-black/30 p-6 !backdrop-blur-md",
+            "fixed isolate z-[60] bg-black/30 p-6 !backdrop-blur-md overflow-hidden",
             className,
           )}
         >
-          <Button
-            variant="link"
-            size="icon"
-            onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 z-10 p-0"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.2, delay: 0.1 } }}
+            exit={{ opacity: 0, transition: { duration: 0 } }}
+            className="size-full"
           >
+            <Button
+              variant="link"
+              size="icon"
+              onClick={() => setOpen(false)}
+              className="absolute top-4 right-4 z-10 p-0"
+            >
             <X className="size-8" />
           </Button>
-          <ul
-            className={cn(
-              "flex flex-col gap-4 overflow-hidden transition-all duration-200",
-              open ? "" : "opacity-0",
-            )}
-          >
+            <ul className="flex flex-col gap-4 overflow-hidden">
             {menuItems.map((item) => (
               <motion.li
                 initial={{ opacity: 0 }}
@@ -226,8 +226,9 @@ export default function AnimatedMenuMobile({
                   </Link>
                 )}
               </motion.li>
-            ))}
-          </ul>
+              ))}
+            </ul>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

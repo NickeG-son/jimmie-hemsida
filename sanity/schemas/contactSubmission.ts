@@ -13,19 +13,19 @@ export default defineType({
     }),
     defineField({
       name: "email",
-      title: "Sender Email",
+      title: "E-postadress",
       type: "string",
       readOnly: true,
     }),
     defineField({
       name: "message",
-      title: "Message",
+      title: "Meddelande",
       type: "text",
       readOnly: true,
     }),
     defineField({
       name: "createdAt",
-      title: "Received At",
+      title: "Mottaget den",
       type: "datetime",
       readOnly: true,
     }),

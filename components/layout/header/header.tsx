@@ -6,8 +6,8 @@ import { Button } from "../../ui/button";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
 import { House, MenuIcon } from "lucide-react";
-import Logo from "@/app/assets/images/jj-logo.png";
-import LogoWhite from "@/app/assets/images/jj-logo-white.png";
+
+import LogoProfile from "@/app/assets/images/logo-profile.jpg";
 import Image from "next/image";
 import AnimatedMenu from "./animated-menu";
 import AnimatedMenuMobile from "./animated-menu-mobile";
@@ -52,8 +52,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           height: isStartPage ? "4rem" : "52px",
         }}
         className={cn(
-          "fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-3 lg:hidden",
-          isGalleryPage ? "bg-muted" : "bg-black/30 backdrop-blur-md",
+          "fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full lg:hidden",
         )}
       >
         <Link
@@ -64,7 +63,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           scroll={false}
         >
           <Image
-            src={LogoWhite.src}
+            src={LogoProfile.src}
             width={100}
             height={100}
             alt="Logo"
@@ -80,23 +79,25 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           className={`flex items-center justify-between px-2 py-2 transition-all duration-500`}
         >
           {/* Logo */}
-          <Link
-            href="/"
-            onClick={() => {
-              window.scrollTo(0, 0);
-            }}
-            scroll={false}
-            className="bg-muted flex size-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-3 text-xl font-bold tracking-widest lg:size-12"
-          >
-            <House className="lg:hidden" />
-            <Image
-              src={LogoWhite.src}
-              width={100}
-              height={100}
-              alt="Logo"
-              className="hidden object-cover lg:block"
-            />
-          </Link>
+          <motion.div whileTap={{ scale: 0.8 }}>
+            <Link
+              href="/"
+              onClick={() => {
+                window.scrollTo(0, 0);
+              }}
+              scroll={false}
+              className="bg-muted flex size-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full lg:size-12"
+            >
+              <House className="lg:hidden" />
+              <Image
+                src={LogoProfile.src}
+                width={100}
+                height={100}
+                alt="Logo"
+                className="hidden object-cover lg:block"
+              />
+            </Link>
+          </motion.div>
 
           {/* Navigation Links - Center */}
           <div className="hidden items-center gap-4 lg:flex">
@@ -152,14 +153,13 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           >
             <YoutubeIcon className="size-6" />
           </Link>
-          <Button
-            variant="link"
-            size="icon"
-            className="bg-muted z-30 flex size-14 flex-shrink-0 flex-col rounded-full p-1 lg:hidden"
+          <motion.button
+            whileTap={{ scale: 0.8 }}
+            className="bg-muted z-30 flex size-14 flex-shrink-0 flex-col items-center justify-center rounded-full p-1 lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <MenuIcon className="size-6" />
-          </Button>
+          </motion.button>
           <div className="hidden size-12 lg:block" />
         </div>
       </header>
