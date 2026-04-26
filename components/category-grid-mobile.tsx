@@ -54,7 +54,6 @@ export default function CategoryGrid({
     return () => clearTimeout(timer);
   }, []);
 
-
   return (
     <div className="flex flex-col gap-4 pt-4">
       <motion.button
@@ -174,10 +173,12 @@ export default function CategoryGrid({
             onClick={() => setDetaildId(image.slug)}
           >
             <Image
-              src={urlFor(image.mainImage).width(1920).height(1080).url()}
+              src={urlFor(image.mainImage).width(800).height(800).url()}
               alt={image.title}
               fill
+              sizes="(max-width: 768px) 50vw, 33vw"
               className="object-cover"
+              priority={index < 4}
             />
             <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
             <Link

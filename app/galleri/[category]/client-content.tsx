@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { urlFor } from "@/sanity/client";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -94,16 +94,18 @@ export default function ClientContent({
     setSelectedCategory(category);
   };
 
-  const filteredImages = selectedCategory
-    ? images.filter((img) => {
-        // Handle both object and string slug formats just in case
-        const catSlug =
-          typeof img.category?.slug === "string"
-            ? img.category.slug
-            : (img.category?.slug as any)?.current;
-        return catSlug === selectedCategory;
-      })
-    : images;
+  const filteredImages = useMemo(() => {
+    return selectedCategory
+      ? images.filter((img) => {
+          // Handle both object and string slug formats just in case
+          const catSlug =
+            typeof img.category?.slug === "string"
+              ? img.category.slug
+              : (img.category?.slug as any)?.current;
+          return catSlug === selectedCategory;
+        })
+      : images;
+  }, [images, selectedCategory]);
 
   return (
     <div
