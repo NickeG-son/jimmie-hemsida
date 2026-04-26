@@ -189,12 +189,13 @@ export default function CategoryGrid({
               fill
               sizes="(max-width: 768px) 50vw, 33vw"
               className="object-cover"
+              quality={layout === "grid" ? 75 : 100}
               // Ladda bara de första 4 bilderna direkt, resten lazy
               priority={index < 4}
             />
-            <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
+            <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/40 p-2 text-white" />
             <Link
-              className="absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-black/20 p-2 text-white backdrop-blur-md"
+              className="absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-black/40 p-2 text-white"
               href={`/kontakt?ref=${image.referenceId}`}
             >
               <MailIcon className="size-5" />
@@ -204,7 +205,7 @@ export default function CategoryGrid({
                 <motion.span
                   layout
                   key="tooltip"
-                  className="absolute right-2 bottom-2 flex items-center justify-center rounded-full bg-black/20 px-3 text-xs whitespace-nowrap text-white backdrop-blur-md"
+                  className="absolute right-2 bottom-2 flex items-center justify-center rounded-full bg-black/40 px-3 text-xs whitespace-nowrap text-white"
                   style={{ height: 40 }}
                   initial={{ opacity: 0, width: 40, translateX: 0 }}
                   animate={{ opacity: 1, width: "auto", translateX: -45 }}
