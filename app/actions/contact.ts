@@ -6,7 +6,8 @@ import { contactSchema } from "@/lib/schemas";
 
 // ✏️ Change this to your friend's email address whenever needed!
 // Nu hämtas mailen säkert från Vercel istället för att vara inskriven här
-const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || "";
+const NOTIFICATION_EMAIL =
+  process.env.NOTIFICATION_EMAIL || "jimmie.svensson@live.se";
 
 const writeClient = createClient({
   projectId: "gr97dtx7",
