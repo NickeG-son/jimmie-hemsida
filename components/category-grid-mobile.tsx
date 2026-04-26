@@ -8,7 +8,7 @@ import Link from "next/link";
 import { flushSync } from "react-dom";
 
 const variantItem = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
@@ -27,17 +27,14 @@ export default function CategoryGrid({
   const [layout, setLayout] = useState("list");
   const [showScrollUp, setShowScrollUp] = useState(false);
   const [showToolTip, setShowToolTip] = useState(true);
-
-  // Skapa en state för hur många bilder som ska visas
   const [visibleCount, setVisibleCount] = useState(16);
 
-  // Använd en Effect för att lyssna på scroll (eller en Intersection Observer)
+  // Infinity scroll
   useEffect(() => {
     const handleScroll = () => {
-      // Om vi är nära botten (t.ex. 200px kvar), ladda 12 till
       if (
         window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
+        document.body.offsetHeight - 300
       ) {
         setVisibleCount((prev) => Math.min(prev + 12, images.length));
       }
@@ -46,37 +43,30 @@ export default function CategoryGrid({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [images.length]);
 
+  // Scroll-to-top knapp
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setShowScrollUp(true);
-      } else {
-        setShowScrollUp(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleScrollToggle = () => setShowScrollUp(window.scrollY > 400);
+    window.addEventListener("scroll", handleScrollToggle);
+    return () => window.removeEventListener("scroll", handleScrollToggle);
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowToolTip(false);
-    }, 3000);
+    const timer = setTimeout(() => setShowToolTip(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="flex flex-col gap-4 pt-4">
+      {/* --- SWITCH LAYOUT BUTTON --- */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="bg-muted fixed right-6 bottom-[95px] z-10 ml-auto flex size-14 cursor-pointer items-center justify-center rounded-full"
+        className="bg-muted fixed right-6 bottom-[95px] z-20 ml-auto flex size-14 cursor-pointer items-center justify-center rounded-full shadow-lg"
         onClick={() => {
           const imagesElems = document.querySelectorAll("[data-photo-slug]");
           let targetSlug: string | null = null;
           let targetOffset = 0;
 
-          // Anchor to the first visible item near the top
           for (let i = 0; i < imagesElems.length; i++) {
             const el = imagesElems[i];
             const rect = el.getBoundingClientRect();
@@ -101,12 +91,10 @@ export default function CategoryGrid({
             if (newEl) {
               const rect = newEl.getBoundingClientRect();
               const absoluteTop = window.scrollY + rect.top;
-
-              const scrollOpts: any = {
+              window.scrollTo({
                 top: absoluteTop - targetOffset,
                 behavior: "instant",
-              };
-              window.scrollTo(scrollOpts);
+              });
             }
           }
         }}
@@ -134,72 +122,66 @@ export default function CategoryGrid({
         </AnimatePresence>
       </motion.button>
 
+      {/* --- SCROLL UP BUTTON --- */}
       <AnimatePresence>
         {showScrollUp && (
           <motion.button
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            className="bg-muted fixed bottom-[95px] left-6 z-10 ml-auto flex size-14 cursor-pointer items-center justify-center rounded-full"
-            onClick={() => {
-              if (showScrollUp) {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }
-            }}
+            className="bg-muted fixed bottom-[95px] left-6 z-20 flex size-14 cursor-pointer items-center justify-center rounded-full shadow-lg"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <motion.span
-              key="grid"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-            >
-              <ArrowUp className="size-6" />
-            </motion.span>
+            <ArrowUp className="size-6" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      <motion.div
-        variants={{
-          visible: {
-            transition: { staggerChildren: 0.05 }, // Snabbare stagger för bättre känsla
-          },
-        }}
-        initial="hidden"
-        animate="visible"
+      {/* --- GRID CONTAINER --- */}
+      <div
         className={`grid ${layout === "list" ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
       >
         {images.slice(0, visibleCount).map((image, index) => (
           <motion.div
+            layout // <--- TILLBAKA! Möjliggör mjuk växling
+            layoutId={`photo-${image.slug}`} // <--- TILLBAKA! Kopplar samman elementen vid växling
             key={image._id}
+            data-photo-slug={image.slug}
             variants={variantItem}
-            // Trigger animation när elementet kommer in i bild
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "0px 0px -50px 0px" }}
-            className="relative aspect-square w-full overflow-hidden rounded-4xl"
+            transition={{
+              layout: { duration: 0.4, ease: "easeInOut" }, // Specifik transition för layout-växlingen
+              delay: index < 12 ? index * 0.05 : 0,
+              duration: 0.3,
+            }}
+            className="bg-muted relative aspect-square w-full cursor-pointer overflow-hidden rounded-4xl"
             onClick={() => setDetaildId(image.slug)}
           >
             <Image
               src={urlFor(image.mainImage)
-                .width(layout === "grid" ? 500 : 1000) // Dynamisk storlek
+                .width(layout === "grid" ? 500 : 1000)
                 .auto("format")
+                .quality(layout === "grid" ? 75 : 100)
                 .url()}
               alt={image.title}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
+              sizes="(max-width: 768px) 50vw, 100vw"
               className="object-cover"
-              quality={layout === "grid" ? 75 : 100}
-              // Ladda bara de första 4 bilderna direkt, resten lazy
               priority={index < 4}
             />
+
             <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/40 p-2 text-white" />
+
             <Link
               className="absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-black/40 p-2 text-white"
               href={`/kontakt?ref=${image.referenceId}`}
+              onClick={(e) => e.stopPropagation()}
             >
               <MailIcon className="size-5" />
             </Link>
+
             <AnimatePresence>
               {showToolTip && index === 0 && (
                 <motion.span
@@ -210,13 +192,12 @@ export default function CategoryGrid({
                   initial={{ opacity: 0, width: 40, translateX: 0 }}
                   animate={{ opacity: 1, width: "auto", translateX: -45 }}
                   exit={{ opacity: 0, width: 40, translateX: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.8 }}
                 >
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 1.1 }}
                   >
                     Kontakta mig om detta fotot
                   </motion.span>
@@ -225,7 +206,7 @@ export default function CategoryGrid({
             </AnimatePresence>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
