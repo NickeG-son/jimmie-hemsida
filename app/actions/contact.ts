@@ -44,7 +44,7 @@ export async function submitContactForm(formData: FormData) {
 
     // Send email notification via Resend
     await resend.emails.send({
-      from: "JimmieJimmie.com <onboarding@resend.dev>", // ✏️ when ready to go live, you can verify jimmiejimmie.com in the Resend dashboard and change the from: to something like kontakt@jimmiejimmie.com
+      from: "JimmieJimmie.com <kontakt@jimmiejimmie.com>", // ✏️ when ready to go live, you can verify jimmiejimmie.com in the Resend dashboard and change the from: to something like kontakt@jimmiejimmie.com
       to: NOTIFICATION_EMAIL,
       replyTo: email,
       subject: `Ny förfrågan från ${name}`,
