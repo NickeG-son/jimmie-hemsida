@@ -247,19 +247,18 @@ export default function ClientContent({
                       <ArrowLeftIcon className="size-5" />
                       <span className="hidden lg:flex">Tillbaka</span>
                     </Button>
-                    {!hideUiIfNoContent && (
-                      <Button
-                        variant="ghost"
-                        onClick={() => setHideUi(!hideUi)}
-                        className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
-                      >
-                        {hideUi ? (
-                          <InfoIcon className="size-5" />
-                        ) : (
-                          <EyeOff className="size-5" />
-                        )}
-                      </Button>
-                    )}
+
+                    <Button
+                      variant="ghost"
+                      onClick={() => setHideUi(!hideUi)}
+                      className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
+                    >
+                      {hideUi ? (
+                        <InfoIcon className="size-5" />
+                      ) : (
+                        <EyeOff className="size-5" />
+                      )}
+                    </Button>
                   </div>
                   {detaildPhoto.referenceId && (
                     <Button

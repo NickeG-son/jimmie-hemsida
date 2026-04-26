@@ -28,6 +28,24 @@ export default function CategoryGrid({
   const [showScrollUp, setShowScrollUp] = useState(false);
   const [showToolTip, setShowToolTip] = useState(true);
 
+  // Skapa en state för hur många bilder som ska visas
+  const [visibleCount, setVisibleCount] = useState(16);
+
+  // Använd en Effect för att lyssna på scroll (eller en Intersection Observer)
+  useEffect(() => {
+    const handleScroll = () => {
+      // Om vi är nära botten (t.ex. 200px kvar), ladda 12 till
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 200
+      ) {
+        setVisibleCount((prev) => Math.min(prev + 12, images.length));
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [images.length]);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -144,33 +162,34 @@ export default function CategoryGrid({
       <motion.div
         variants={{
           visible: {
-            transition: {
-              duration: 0.4,
-              delayChildren: 0.1,
-              staggerChildren: 0.1,
-            },
+            transition: { staggerChildren: 0.05 }, // Snabbare stagger för bättre känsla
           },
         }}
-        initial={skipAnimation ? "visible" : "hidden"}
+        initial="hidden"
         animate="visible"
         className={`grid ${layout === "list" ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
       >
-        {images.map((image: GalleryImage, index: number) => (
+        {images.slice(0, visibleCount).map((image, index) => (
           <motion.div
-            layout
-            layoutId={`photo-${image.slug}`}
             key={image._id}
-            data-photo-slug={image.slug}
             variants={variantItem}
-            className="relative aspect-square w-full cursor-pointer overflow-hidden rounded-4xl"
+            // Trigger animation när elementet kommer in i bild
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+            className="relative aspect-square w-full overflow-hidden rounded-4xl"
             onClick={() => setDetaildId(image.slug)}
           >
             <Image
-              src={urlFor(image.mainImage).width(800).height(800).url()}
+              src={urlFor(image.mainImage)
+                .width(layout === "grid" ? 500 : 1000) // Dynamisk storlek
+                .auto("format")
+                .url()}
               alt={image.title}
               fill
               sizes="(max-width: 768px) 50vw, 33vw"
               className="object-cover"
+              // Ladda bara de första 4 bilderna direkt, resten lazy
               priority={index < 4}
             />
             <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
