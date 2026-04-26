@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroSlide } from "@/lib/types";
-import { ArrowRight, ChevronUp, MoveRight } from "lucide-react";
+import { ChevronUp, MoveRight } from "lucide-react";
 import { useSessionIndicator } from "@/hooks/use-session-indicator";
 
 export default function HeroSection({ slides }: { slides: HeroSlide[] }) {

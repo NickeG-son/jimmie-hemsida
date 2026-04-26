@@ -2,14 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { GalleryImage } from "@/lib/types";
-import {
-  ArrowUp,
-  LayoutGrid,
-  Mail,
-  MailIcon,
-  Maximize,
-  Square,
-} from "lucide-react";
+import { ArrowUp, LayoutGrid, MailIcon, Maximize, Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { flushSync } from "react-dom";

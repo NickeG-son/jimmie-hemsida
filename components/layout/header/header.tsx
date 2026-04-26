@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useScroll, useMotionValueEvent, motion } from "motion/react";
-import { Button } from "../../ui/button";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
 import { House, MenuIcon } from "lucide-react";
@@ -23,7 +22,6 @@ interface HeaderProps {
 
 export default function Header({ menuItems, categories }: HeaderProps) {
   const isStartPage = usePathname() === "/";
-  const isGalleryPage = usePathname().startsWith("/galleri/");
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

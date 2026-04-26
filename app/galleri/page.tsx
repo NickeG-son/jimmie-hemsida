@@ -1,5 +1,5 @@
 import GalleryCarousel from "@/components/gallery-carousel";
-import { client, urlFor } from "@/sanity/client";
+import { client } from "@/sanity/client";
 
 export default async function GalleriRootPage() {
   // Fetch all categories that have a cover image!

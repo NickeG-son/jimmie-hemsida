@@ -2,11 +2,11 @@
 
 import { createClient } from "next-sanity";
 import { Resend } from "resend";
-import { z } from "zod";
 import { contactSchema } from "@/lib/schemas";
 
 // ✏️ Change this to your friend's email address whenever needed!
-const NOTIFICATION_EMAIL = "niclasgustawsson@hotmail.com";
+// Nu hämtas mailen säkert från Vercel istället för att vara inskriven här
+const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || "";
 
 const writeClient = createClient({
   projectId: "gr97dtx7",
