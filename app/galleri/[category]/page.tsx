@@ -9,9 +9,17 @@ export default async function GalleryCategoryPage({
   const { category } = await params;
 
   // Fetch the category to check if it's an aggregated "show all" category
-  const categoryDoc = await client.fetch<{ _id: string; isAggregated?: boolean } | null>(
+  const categoryDoc = await client.fetch<{
+    _id: string;
+    isAggregated?: boolean;
+  } | null>(
     `*[_type == "category" && slug.current == $category][0]{ _id, isAggregated }`,
-    { category }
+    { category },
+  );
+  const categories = await client.fetch<
+    { _id: string; title: string; slug: string; isAggregated?: boolean }[]
+  >(
+    `*[_type == "category"] | order(_createdAt desc) { _id, title, "slug": slug.current, isAggregated }`,
   );
 
   const isAggregated = categoryDoc?.isAggregated === true;
@@ -26,6 +34,12 @@ export default async function GalleryCategoryPage({
     iso,
     aperture,
     shutterSpeed,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      isAggregated
+    }
   }`;
 
   const images = await client.fetch(
@@ -35,5 +49,11 @@ export default async function GalleryCategoryPage({
     isAggregated ? {} : { category },
   );
 
-  return <ClientContent images={images} category={category} />;
+  return (
+    <ClientContent
+      images={images}
+      category={category}
+      categories={categories}
+    />
+  );
 }

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { urlFor } from "@/sanity/client";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { GalleryImage } from "@/lib/types";
+import { Category, GalleryImage } from "@/lib/types";
 import {
   Aperture,
   ArrowLeftIcon,
@@ -23,13 +23,16 @@ import CategoryGrid from "@/components/category-grid";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CategoryGridMobile from "@/components/category-grid-mobile";
 import { useSessionIndicator } from "@/hooks/use-session-indicator";
+import CategoryFilter from "@/components/category-filter";
 
 export default function ClientContent({
   images,
   category,
+  categories,
 }: {
   images: GalleryImage[];
   category: string;
+  categories: Category[];
 }) {
   const [detaildId, setDetaildId] = useState<string | null>(null);
   const detaildPhoto = images.find(
@@ -43,6 +46,7 @@ export default function ClientContent({
   const isMobile = useIsMobile();
   const sessionAllows = useSessionIndicator("hint-rotate-phone");
   const [copied, setCopied] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     if (!detaildId) {
@@ -86,6 +90,21 @@ export default function ClientContent({
     }
   }, [detaildId]);
 
+  const onCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  const filteredImages = selectedCategory
+    ? images.filter((img) => {
+        // Handle both object and string slug formats just in case
+        const catSlug =
+          typeof img.category?.slug === "string"
+            ? img.category.slug
+            : (img.category?.slug as any)?.current;
+        return catSlug === selectedCategory;
+      })
+    : images;
+
   return (
     <div
       className={cn(
@@ -110,15 +129,22 @@ export default function ClientContent({
           <ArrowLeftIcon className="size-5" />
           <span className="hidden lg:flex">Tillbaka till Galleri</span>
         </Link>
+        {category === "fotografier" && (
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={onCategoryChange}
+          />
+        )}
         {isMobile ? (
           <CategoryGridMobile
-            images={images}
+            images={filteredImages}
             setDetaildId={setDetaildId}
             skipAnimation={hasOpenedPhoto}
           />
         ) : (
           <CategoryGrid
-            images={images}
+            images={filteredImages}
             setDetaildId={setDetaildId}
             skipAnimation={hasOpenedPhoto}
           />

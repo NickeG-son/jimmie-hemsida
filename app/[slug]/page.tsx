@@ -61,7 +61,7 @@ export default async function GenericPage({
   };
 
   return (
-    <article className="w-full">
+    <article className="w-full pb-20 lg:pb-0">
       {/* Dynamic Title */}
 
       {/* Dynamic Header Image (If he uploaded one) */}
